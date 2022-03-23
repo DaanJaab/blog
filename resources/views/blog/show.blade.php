@@ -21,17 +21,17 @@
                             Image_path: {{ $post->image_path }}<br>
                             Created_at: {{ $post->created_at }}<br>
                             Updated_at: {{ $post->updated_at }}<br>
-                            User ID / name: {{ $post->user_id . ' / ' . $post->user->name }}<br>
+                            User ID / name: {{ $post->user_id . ' / ' }}<br>
                             Category ID / name: {{ $post->category_id . ' / ' . $post->category->name }}<br>
                 </div>
             </div>
             <div class="card-header">{{ __('Comments') }}</div>
-            @foreach($comments as $comment)
+            @foreach($post->comments as $comment)
                 <div class="card">
                     <div class="card-body">
                         ID: {{ $comment->id }}<br>
                         Description: {{ $comment->description }}<br>
-                        By: {{ $comment->user->name }}<br>
+                        By: <br>
                         Post id: {{ $comment->post_id }}
                     </div>
                 </div>

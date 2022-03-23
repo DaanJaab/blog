@@ -80,11 +80,10 @@ class PostController extends Controller
      */
     public function show($slug)
     {
-        $check = Post::where('slug', $slug)->first();
+        $check = Post::where('slug', $slug)->with('comments')->first();
         if (true) {
             return view('blog.show')
-                ->with('post', $check)
-                ->with('comments', Comment::where('post_id', $check->id)->with('user')->get());
+                ->with('post', $check);
         } else {
             return redirect('/blog')
                 ->with('message', ['warning', 'Post isn\'t exists!']);
