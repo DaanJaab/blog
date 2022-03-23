@@ -1,0 +1,32 @@
+@extends('layouts.app')
+
+@section('content')
+<div class="container">
+    @if (session('message'))
+        <div class="col-md-4 alert alert-{{ session('message.0') }}" role="alert">
+                {{ session('message.1') }}
+        </div>
+    @endif
+
+    <div class="row justify-content-center">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">{{ __('Blog') }}</div>
+                <div class="card-body">
+                    @foreach($comments as $comment)
+                        {<br>
+                            ID: {{ $comment->id }}<br>
+                            Description: {{ $comment->description }}<br>
+                            Created_at: {{ $comment->created_at }}<br>
+                            Updated_at: {{ $comment->updated_at }}<br>
+                            User_id: {{ $comment->user_id }}<br>
+                            Post_id: {{ $comment->post_id }}<br>
+                        }<br><br>
+                    @endforeach
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
