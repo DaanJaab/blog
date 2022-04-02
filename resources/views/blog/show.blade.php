@@ -2,59 +2,113 @@
 
 @section('content')
 <div class="container">
-
-    @if (session('message'))
-        <div class="col-md-4 alert alert-{{ session('message.0') }}" role="alert">
-                {{ session('message.1') }}
-        </div>
-    @endif
-
     <div class="row justify-content-center">
         <div class="col-md-12">
+            @include('layouts.messages_box')
             <div class="card">
                 <div class="card-header">{{ __('Blog') }}</div>
                 <div class="card-body">
-                            ID: {{ $post->id }}<br>
-                            Slug: {{ $post->slug }}<br>
-                            Title: {{ $post->title }}<br>
-                            Description: {{ $post->description }}<br>
-                            Image_path: {{ $post->image_path }}<br>
-                            Created_at: {{ $post->created_at }}<br>
-                            Updated_at: {{ $post->updated_at }}<br>
-                            User ID / name: {{ $post->user_id . ' / ' }}<br>
-                            Category ID / name: {{ $post->category_id . ' / ' . $post->category->name }}<br>
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Slug</th>
+                            <th scope="col">Title</th>
+                            <th scope="col">Description</th>
+                            {{-- <thscope="col">Image_path</th> --}}
+                            <th scope="col">Created_at</th>
+                            <th scope="col">Updated_at</th>
+                            <th scope="col">User ID / name</th>
+                            <th scope="col">Category ID / name</th>
+                            <th scope="col">Akcje</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row">{{ $post->id }}</th>
+                                <td>{{ $post->slug }}</td>
+                                <td>{{ $post->title }}</td>
+                                <td>{{ $post->description }}</td>
+                                {{-- <td>{{ $post->image_path }}</td> --}}
+                                <td>{{ $post->created_at }}</td>
+                                <td>{{ $post->updated_at }}</td>
+                                <td>{{ $post->user_id . ' / ' . $post->user->name }}</td>
+                                <td>{{ $post->category_id . ' / ' . $post->category->name }}</td>
+                                <td>
+                                    @can('update-post', $post)
+                                        <a href="{{ route('blog.edit', $post->slug) }}">
+                                            <button class="btn btn-success btn-sm">E</button></a>
+                                        <form method="post" class="delete_form" action="{{ route('blog.destroy', $post->slug) }}">
+                                            @csrf
+                                            @method('delete')
+                                            <button type="submit" class="btn btn-danger btn-sm delete" data-id="{{ $post->slug }}">D</button>
+                                        </form>
+                                    @endcan
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
             <div class="card-header">{{ __('Comments') }}</div>
-            @foreach($post->comments as $comment)
                 <div class="card">
                     <div class="card-body">
-                        ID: {{ $comment->id }}<br>
-                        Description: {{ $comment->description }}<br>
-                        By: <br>
-                        Post id: {{ $comment->post_id }}
+                        @isset($post->comments[0])
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Description</th>
+                                <th scope="col">Created_at</th>
+                                <th scope="col">Updated_at</th>
+                                <th scope="col">User ID / name</th>
+                                <th scope="col">Post ID</th>
+                                <th scope="col">Akcje</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($post->comments as $comment)
+                                    <tr>
+                                        <th scope="row">{{ $comment->id }}</th>
+                                        <td>{{ $comment->description }}</td>
+                                        <td>{{ $comment->created_at }}</td>
+                                        <td>{{ $comment->updated_at }}</td>
+                                        <td>{{ $comment->user_id . ' / ' . $comment->user->name }}</td>
+                                        <td>{{ $comment->post_id }}</td>
+                                        <td>
+                                            <a href="{{ route('comment.show', $comment->id) }}">
+                                                <button class="btn btn-primary btn-sm">S</button></a>
+                                            @can('update-comment', $comment)
+                                                <a href="{{ route('comment.edit', $comment->id) }}">
+                                                    <button class="btn btn-success btn-sm">E</button></a>
+                                                <form method="post" class="delete_form" action="{{ route('comment.destroy', $comment->id) }}">
+                                                    @csrf
+                                                    @method('delete')
+                                                    <button type="submit" class="btn btn-danger btn-sm delete" data-id="{{ $comment->id }}">D</button>
+                                                </form>
+                                            @endcan
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                        @else
+                            <div class="row mb-0">
+                                <label for="description" class="col-form-label text-md-center">{{ __('Nie ma komentarzy do tego posta.') }}</label>
+                            </div>
+                        @endisset
                     </div>
                 </div>
-            @endforeach
-            @auth
             <div class="card">
                 <div class="card-header">{{ __('Add comment') }}</div>
                 <div class="card-body">
-                    <div class="card-body">
+                    @auth
                         <form method="POST" action="{{ route('comment.store') }}">
                             @csrf
-                            @if($errors->any())
-                                @foreach ($errors->all() as $error)
-                                    <div>{{ $error }}</div>
-                                @endforeach
-                            @endif
-
                             <div class="row mb-3">
                                 <label for="description" class="col-md-4 col-form-label text-md-end">{{ __('You\'r comment') }}</label>
-
                                 <div class="col-md-6">
-                                    <textarea id="description" maxlength="1500" class="form-control @error('description') is-invalid @enderror" name="description" required></textarea>
-
+                                    <textarea id="description" maxlength="1500" class="form-control @error('description') is-invalid @enderror" name="description"></textarea>
                                     @error('description')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -62,8 +116,7 @@
                                     @enderror
                                 </div>
                             </div>
-                            <input id="post_id" hidden class="form-control" name="post_id" value="{{ $post->id }}" required>
-
+                            <input type="hidden" name="post_id" value="{{ $post->id }}">
                             <div class="row mb-0">
                                 <div class="col-md-6 offset-md-4">
                                     <button type="submit" class="btn btn-primary">
@@ -72,10 +125,14 @@
                                 </div>
                             </div>
                         </form>
-                    </div>
+                    @endauth
+                    @guest
+                        <div class="row mb-0">
+                            <label for="description" class="col-form-label text-md-center">{{ __('Must login to put a comment!') }}</label>
+                        </div>
+                    @endguest
                 </div>
             </div>
-            @endif
         </div>
     </div>
 </div>

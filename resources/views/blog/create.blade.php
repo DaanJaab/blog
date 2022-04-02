@@ -5,16 +5,11 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{ __('Register') }}</div>
+                <div class="card-header">{{ __('Dodaj posta') }}</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('blog.store') }}" enctype="multipart/form-data">
+                    <form method="POST" action="{{ route('blog.store') }}" {{-- enctype="multipart/form-data" --}}>
                         @csrf
-                        @if($errors->any())
-                        @foreach ($errors->all() as $error)
-                            <div>{{ $error }}</div>
-                        @endforeach
-                    @endif
                         <div class="row mb-3">
                             <label for="title" class="col-md-4 col-form-label text-md-end">{{ __('Title') }}</label>
 
@@ -33,7 +28,7 @@
                             <label for="description" class="col-md-4 col-form-label text-md-end">{{ __('Description') }}</label>
 
                             <div class="col-md-6">
-                                <textarea id="description" maxlength="1500" class="form-control @error('description') is-invalid @enderror" name="description" value="{{ old('description') }}" required></textarea>
+                                <textarea id="description" maxlength="1500" class="form-control @error('description') is-invalid @enderror" name="description" required>{{ old('description') }}</textarea>
 
                                 @error('description')
                                     <span class="invalid-feedback" role="alert">
@@ -61,7 +56,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group row">
+                        {{-- <div class="form-group row">
                             <label for="image" class="col-md-4 col-form-label text-md-right">{{ __('shop.product.fields.image') }}</label>
 
                             <div class="col-md-6">
@@ -73,12 +68,12 @@
                                     </span>
                                 @enderror
                             </div>
-                        </div>
+                        </div> --}}
 
                         <div class="row mb-0">
                             <div class="col-md-6 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
-                                    {{ __('Register') }}
+                                    {{ __('Dodaj posta') }}
                                 </button>
                             </div>
                         </div>

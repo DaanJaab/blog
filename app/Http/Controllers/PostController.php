@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Comment;
 use App\Models\Post;
 use App\Models\PostsCategory;
-use App\Models\User;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 use function PHPUnit\Framework\throwException;
 
@@ -26,7 +25,7 @@ class PostController extends Controller
     public function index()
     {
         return view('blog.index')
-            ->with('posts', Post::orderBy('updated_at', 'DESC')->get());
+            ->with('posts', Post::latest()->with(['user', 'category'])->get());
     }
 
     /**
@@ -52,23 +51,23 @@ class PostController extends Controller
         $request->validate([
             'title' => 'required',
             'description' => 'required',
-            'image' => 'required|mimes:jpg,png,jpeg|max:5048'
+            // 'image' => 'required|mimes:jpg,png,jpeg|max:5048'
         ]);
 
-        $newImageName = SlugService::createSlug(Post::class, 'slug', $request->title) . '-' . uniqid() . '.' . $request->image->extension();
-        $request->image->move(public_path('images'), $newImageName);
+        // $newImageName = SlugService::createSlug(Post::class, 'slug', $request->title) . '-' . uniqid() . '.' . $request->image->extension();
+        // $request->image->move(public_path('images'), $newImageName);
 
         $post = new Post;
         $post->user_id = auth()->user()->id;
         $post->title = $request->input('title');
         $post->description = $request->input('description');
         $post->slug = SlugService::createSlug(Post::class, 'slug', $request->title);
-        $post->image_path = $newImageName;
+        // $post->image_path = $newImageName;
         $post->category_id = $request->category;
 
         $post->save();
 
-        return redirect('/blog')
+        return redirect()->route('blog.index')
             ->with('message', ['success', 'Your post has been added!']);
     }
 
@@ -78,16 +77,10 @@ class PostController extends Controller
      * @param  string  $slug
      * @return \Illuminate\Http\Response
      */
-    public function show($slug)
+    public function show(Post $blog)
     {
-        $check = Post::where('slug', $slug)->with('comments')->first();
-        if (true) {
-            return view('blog.show')
-                ->with('post', $check);
-        } else {
-            return redirect('/blog')
-                ->with('message', ['warning', 'Post isn\'t exists!']);
-        }
+        return view('blog.show')
+            ->with('post', Post::where('slug', $blog->slug)->with(['comments.user'])->firstOrFail());
     }
 
     /**
@@ -96,15 +89,13 @@ class PostController extends Controller
      * @param  string  $slug
      * @return \Illuminate\Http\Response
      */
-    public function edit($slug)
+    public function edit(Post $blog)
     {
-        if (isset(Post::where('slug', $slug)->first()->slug)) {
-            return view('blog.edit')
-                ->with('post', Post::where('slug', $slug)->first());
-        } else {
-            return redirect('/blog')
-                ->with('message', ['warning', 'Post isn\'t exists!']);
+        if (!Gate::allows('update-post', $blog)) {
+            abort(403, 'nie możesz edytować czyjegoś posta!');
         }
+        return view('blog.edit')
+            ->with('post', Post::where('slug', $blog->slug)->first());
     }
 
     /**
@@ -114,20 +105,23 @@ class PostController extends Controller
      * @param  string  $slug
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $slug)
+    public function update(Request $request, Post $blog)
     {
+        if (!Gate::allows('update-post', $blog)) {
+            abort(403);
+        }
         $request->validate([
             'title' => 'required',
             'description' => 'required',
         ]);
 
-        Post::where('slug', $slug)
+        Post::where('slug', $blog->slug)
             ->update([
                 'title' => $request->input('title'),
                 'description' => $request->input('description')
             ]);
 
-        return redirect('/blog')
+        return redirect()->route('blog.show', $blog->slug)
             ->with('message', ['success', 'Your post has been updated!']);
     }
 
@@ -137,12 +131,14 @@ class PostController extends Controller
      * @param  string  $slug
      * @return \Illuminate\Http\Response
      */
-    public function destroy($slug)
+    public function destroy(Post $blog)
     {
-        $post = Post::where('slug', $slug);
-        $post->delete();
+        if (!Gate::allows('update-post', $blog)) {
+            abort(403, 'nie możesz usunąć czyjegoś posta!');
+        }
+        $blog->delete();
 
-        return redirect('/blog')
+        return redirect()->route('blog.index')
             ->with('message', ['danger', 'Your post has been deleted!']);
     }
 }

@@ -15,7 +15,7 @@ class Post extends Model
         'slug',
         'title',
         'description',
-        'image_path',
+        // 'image_path',
         'category_id'
     ];
 
@@ -32,6 +32,11 @@ class Post extends Model
     public function category()
     {
         return $this->belongsTo(PostsCategory::class)->select('id', 'name');
+    }
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
     }
 
     public function sluggable(): array

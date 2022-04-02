@@ -2,31 +2,61 @@
 
 @section('content')
 <div class="container">
-    @if (session('message'))
-        <div class="col-md-4 alert alert-{{ session('message.0') }}" role="alert">
-                {{ session('message.1') }}
-        </div>
-    @endif
-
     <div class="row justify-content-center">
         <div class="col-md-12">
+            @include('layouts.messages_box')
             <div class="card">
-                <div class="card-header">{{ __('Blog') }}</div>
+                <div class="card-header">{{ __('Blog') }}
+                        <div class="col-md-1 offset-md-11">
+                            <a href="{{ route('blog.create') }}">
+                            <button class="btn btn-primary">
+                                {{ __('Dodaj posta') }}
+                            </button></a>
+                    </div>
+                </div>
                 <div class="card-body">
-                    @foreach($posts as $post)
-                        {<br>
-                            ID: {{ $post->id }}<br>
-                            Slug: {{ $post->slug }}<br>
-                            Title: {{ $post->title }}<br>
-                            Description: {{ $post->description }}<br>
-                            Image_path: {{ $post->image_path }}<br>
-                            Created_at: {{ $post->created_at }}<br>
-                            Updated_at: {{ $post->updated_at }}<br>
-                            User_id: {{ $post->user_id }}<br>
-                            Category_id: {{ $post->category_id }}<br>
-                        }<br><br>
-                    @endforeach
-
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Slug</th>
+                            <th scope="col">Title</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Created_at</th>
+                            <th scope="col">Updated_at</th>
+                            <th scope="col">User ID / name</th>
+                            <th scope="col">Category ID / name</th>
+                            <th scope="col">Akcje</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($posts as $post)
+                            <tr>
+                                <th scope="row">{{ $post->id }}</th>
+                                <td>{{ $post->slug }}</td>
+                                <td>{{ $post->title }}</td>
+                                <td>{{ $post->description }}</td>
+                                <td>{{ $post->created_at }}</td>
+                                <td>{{ $post->updated_at }}</td>
+                                <td>{{ $post->user_id . ' / ' . $post->user->name }}</td>
+                                <td>{{ $post->category_id . ' / ' . $post->category->name }}</td>
+                                <td>
+                                    <a href="{{ route('blog.show', $post->slug) }}">
+                                        <button class="btn btn-primary btn-sm">S</button></a>
+                                    @can('update-post', $post)
+                                        <a href="{{ route('blog.edit', $post->slug) }}">
+                                            <button class="btn btn-success btn-sm">E</button></a>
+                                        <form method="post" class="delete_form" action="{{ route('blog.destroy', $post->slug) }}">
+                                            @csrf
+                                            @method('delete')
+                                            <button type="submit" class="btn btn-danger btn-sm delete" data-id="{{ $post->slug }}">D</button>
+                                        </form>
+                                    @endcan
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
