@@ -3,7 +3,6 @@
 use App\Http\Controllers\AccountsController;
 use App\Http\Controllers\CommentsController;
 use App\Http\Controllers\PostsController;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -32,7 +31,7 @@ Route::controller(AccountsController::class)->group(function () {
     Route::get('/users', 'usersIndex')->name('users.index');
     Route::get('/users/{user}', 'show')->name('users.show');
 });
-Route::get('/users/{post}/comments', [CommentsController::class, 'index'])->name('users.comments.index');
+Route::get('/users/{user}/comments', [CommentsController::class, 'indexByUser'])->name('users.comments.index');
 Route::resource('/posts', PostsController::class);
 Route::resource('posts.comments', CommentsController::class, [
     'except' => ['create']

@@ -6,7 +6,7 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">EDIT: Comment</div>
-                    <form method="POST" action="{{ route('posts.comments.update', [$post, $comment->id]) }}">
+                    <form method="POST" action="{{ route('posts.comments.update', [$post_slug, $comment->id]) }}">
                         {{ method_field('PUT') }}
                         @csrf
                         <div class="row mb-3">

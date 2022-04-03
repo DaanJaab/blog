@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreCommentRequest;
+use App\Http\Requests\UpdateCommentRequest;
 use App\Models\Comment;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Route;
 
 class CommentsController extends Controller
 {
@@ -15,48 +16,46 @@ class CommentsController extends Controller
     public function __construct()
     {
         $this->middleware('auth', ['except' => ['show']]);
-        //$this->middleware('admin', ['only' => ['index']]);
+        //$this->middleware('isadmin', ['only' => ['index']]);
     }
+
     /**
      * Display a listing of the resource.
      *
-     * @param  string  $post
+     * @param  object  $post
      * @return \Illuminate\Http\Response
      */
-    public function index($post)
+    public function index(Post $post)
     {
-        if (Route::is('posts.comments.index')) {
-            $post = Post::where('slug', $post)->firstOrFail();
-            $searchIn = 'post_id';
-            $searchBy = $post->id;
-        } elseif (Route::is('users.comments.index')) {
-            $searchIn = 'user_id';
-            $searchBy = $post;
-        }
-
         return view('comments.index')
-            ->with('comments', Comment::where($searchIn, $searchBy)->with(['user', 'post'])->get());
+            ->with('comments', Comment::where('post_id', $post->id)->with(['user', 'post'])->paginate());
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @param  object  $post
+     * @return \Illuminate\Http\Response
+     */
+    public function indexByUser(User $user)
+    {
+        return view('comments.index')
+            ->with('comments', Comment::where('user_id', $user->id)->with(['user', 'post'])->paginate());
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  model  $post
+     * @param  object  $post
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, Post $post)
+    public function store(StoreCommentRequest $request, Post $post)
     {
-        $request->validate([
-            'description' => 'required',
-            'post_id' => 'exists:posts,id'
-        ]);
-
         $comment = new Comment;
         $comment->user_id = auth()->user()->id;
         $comment->description = $request->input('description');
         $comment->post_id = $post->id;
-
         $comment->save();
 
         return redirect()->route('posts.show', $post->slug)
@@ -67,7 +66,7 @@ class CommentsController extends Controller
      * Display the specified resource.
      *
      * @param  string  $post_slug
-     * @param  model  $comment
+     * @param  object  $comment
      * @return \Illuminate\Http\Response
      */
     public function show($post_slug, Comment $comment)
@@ -80,15 +79,13 @@ class CommentsController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  string  $post_slug
-     * @param  model  $comment
+     * @param  object  $comment
      * @return \Illuminate\Http\Response
      */
-    public function edit($post, Comment $comment)
+    public function edit($post_slug, Comment $comment)
     {
-        if (!Gate::allows('update-comment', $comment)) {
-            abort(403, 'nie możesz edytować czyjegoś komentarza!');
-        }
-        return view('comments.edit', compact('post'))
+
+        return view('comments.edit', compact('post_slug'))
             ->with('comment', $comment);
     }
 
@@ -96,19 +93,12 @@ class CommentsController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  string  $slug
      * @param  string  $post_slug
+     * @param  object  $comment
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $post_slug, Comment $comment)
+    public function update(UpdateCommentRequest $request, $post_slug, Comment $comment)
     {
-        if (!Gate::allows('update-comment', $comment)) {
-            abort(403, 'nie możesz edytować czyjegoś komentarza!');
-        }
-        $request->validate([
-            'description' => 'required',
-        ]);
-
         $comment->update([
             'description' => $request->input('description')
         ]);
@@ -121,7 +111,7 @@ class CommentsController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  string  $post_slug
-     * @param  model  $comment
+     * @param  object  $comment
      * @return \Illuminate\Http\Response
      */
     public function destroy($post_slug, Comment $comment)

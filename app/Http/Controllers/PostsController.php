@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StorePostRequest;
+use App\Http\Requests\UpdatePostRequest;
 use App\Models\Post;
 use App\Models\PostsCategory;
 use Cviebrock\EloquentSluggable\Services\SlugService;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
-
-use function PHPUnit\Framework\throwException;
 
 class PostsController extends Controller
 {
@@ -25,7 +24,7 @@ class PostsController extends Controller
     public function index()
     {
         return view('posts.index')
-            ->with('posts', Post::latest()->with(['user', 'category'])->get());
+            ->with('posts', Post::latest()->with(['user', 'category'])->paginate());
     }
 
     /**
@@ -46,14 +45,8 @@ class PostsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StorePostRequest $request)
     {
-        $request->validate([
-            'title' => 'required',
-            'description' => 'required',
-            // 'image' => 'required|mimes:jpg,png,jpeg|max:5048'
-        ]);
-
         // $newImageName = SlugService::createSlug(Post::class, 'slug', $request->title) . '-' . uniqid() . '.' . $request->image->extension();
         // $request->image->move(public_path('images'), $newImageName);
 
@@ -74,19 +67,19 @@ class PostsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  string  $post
+     * @param  string  $post_slug
      * @return \Illuminate\Http\Response
      */
-    public function show($post)
+    public function show($post_slug)
     {
         return view('posts.show')
-            ->with('post', Post::where('slug', $post)->with(['comments.user'])->firstOrFail());
+            ->with('post', Post::where('slug', $post_slug)->with(['comments.user'])->firstOrFail());
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  model  $post
+     * @param  object  $post
      * @return \Illuminate\Http\Response
      */
     public function edit(Post $post)
@@ -102,19 +95,11 @@ class PostsController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  model  $post
+     * @param  object  $post
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Post $post)
+    public function update(UpdatePostRequest $request, Post $post)
     {
-        if (!Gate::allows('update-post', $post)) {
-            abort(403, 'nie możesz edytować czyjegoś posta!');
-        }
-        $request->validate([
-            'title' => 'required',
-            'description' => 'required',
-        ]);
-
         $post->update([
             'title' => $request->input('title'),
             'description' => $request->input('description')
@@ -127,7 +112,7 @@ class PostsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  model  $post
+     * @param  object  $post
      * @return \Illuminate\Http\Response
      */
     public function destroy(Post $post)

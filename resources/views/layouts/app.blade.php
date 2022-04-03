@@ -58,6 +58,9 @@
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                    @can('isAdmin')
+                                        <a class="dropdown-item" href="/test">Test admin</a>
+                                    @endcan
                                     <a class="dropdown-item" href="{{ route('account.index') }}">Konto</a>
                                     <a class="dropdown-item" href="{{ route('posts.index') }}">Posty</a>
                                     <a class="dropdown-item" href="">...</a>

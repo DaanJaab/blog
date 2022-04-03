@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateAccountRequest;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
 
 class AccountsController extends Controller
 {
@@ -31,7 +30,6 @@ class AccountsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  string  $slug
      * @return \Illuminate\Http\Response
      */
     public function edit()
@@ -44,14 +42,10 @@ class AccountsController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  string  $slug
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(UpdateAccountRequest $request)
     {
-        $request->validate([
-            'description' => 'required',
-        ]);
         auth()->user()->update([
             'description' => $request->input('description')
         ]);
@@ -63,7 +57,6 @@ class AccountsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  string  $slug
      * @return \Illuminate\Http\Response
      */
     public function destroy()
@@ -87,18 +80,18 @@ class AccountsController extends Controller
     public function usersIndex()
     {
         return view('users.index')
-            ->with('users', User::all());
+            ->with('users', User::paginate());
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  string  $user
+     * @param  int  $user_id
      * @return \Illuminate\Http\Response
      */
-    public function show($user)
+    public function show($user_id)
     {
         return view('users.show')
-            ->with('user', User::where('id', $user)->with(['posts', 'comments'])->firstOrFail());
+            ->with('user', User::where('id', $user_id)->with(['posts', 'comments'])->firstOrFail());
     }
 }

@@ -45,6 +45,7 @@
                             @endforeach
                         </tbody>
                     </table>
+                    {{ $comments->links() }}
                 </div>
             </div>
         </div>

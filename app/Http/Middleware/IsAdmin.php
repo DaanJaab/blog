@@ -22,6 +22,6 @@ class IsAdmin
             return $next($request);
         }
 
-        return redirect()->route('blog.index')->with('message', ['danger', 'You are not admin!']);
+        return redirect()->route('posts.index')->with('message', ['danger', 'You are not admin!']);
     }
 }

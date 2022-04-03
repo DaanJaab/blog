@@ -30,14 +30,20 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        Gate::define('update-user', function (User $user, User $profile) {
-            return ($user->id === $profile->id);
+        Gate::define('update-user', function (User $user, User $auth_user) {
+            return ($user->id === $auth_user->id);
         });
         Gate::define('update-post', function (User $user, Post $post) {
             return ($user->id === $post->user_id);
         });
         Gate::define('update-comment', function (User $user, Comment $comment) {
             return ($user->id === $comment->user_id);
+        });
+        Gate::define('isAdmin', function (User $user) {
+            return ($user->id === UserRole::ADMIN);
+        });
+        Gate::define('isModer', function (User $user) {
+            return ($user->id === UserRole::MODER);
         });
         Gate::before(function (User $user) { // dopuszcza admin we wszystkich autoryzacjach!
             if ($user->role === UserRole::ADMIN) {
