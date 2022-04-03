@@ -36,9 +36,9 @@
                                 <td>{{ $post->category_id . ' / ' . $post->category->name }}</td>
                                 <td>
                                     @can('update-post', $post)
-                                        <a href="{{ route('blog.edit', $post->slug) }}">
+                                        <a href="{{ route('posts.edit', $post->slug) }}">
                                             <button class="btn btn-success btn-sm">E</button></a>
-                                        <form method="post" class="delete_form" action="{{ route('blog.destroy', $post->slug) }}">
+                                        <form method="post" class="delete_form" action="{{ route('posts.destroy', $post->slug) }}">
                                             @csrf
                                             @method('delete')
                                             <button type="submit" class="btn btn-danger btn-sm delete" data-id="{{ $post->slug }}">D</button>
@@ -76,12 +76,12 @@
                                         <td>{{ $comment->user_id . ' / ' . $comment->user->name }}</td>
                                         <td>{{ $comment->post_id }}</td>
                                         <td>
-                                            <a href="{{ route('comment.show', $comment->id) }}">
+                                            <a href="{{ route('posts.comments.show', [$post->slug, $comment->id]) }}">
                                                 <button class="btn btn-primary btn-sm">S</button></a>
                                             @can('update-comment', $comment)
-                                                <a href="{{ route('comment.edit', $comment->id) }}">
+                                                <a href="{{ route('posts.comments.edit', [$post->slug, $comment->id]) }}">
                                                     <button class="btn btn-success btn-sm">E</button></a>
-                                                <form method="post" class="delete_form" action="{{ route('comment.destroy', $comment->id) }}">
+                                                <form method="post" class="delete_form" action="{{ route('posts.comments.destroy', [$post->slug, $comment->id]) }}">
                                                     @csrf
                                                     @method('delete')
                                                     <button type="submit" class="btn btn-danger btn-sm delete" data-id="{{ $comment->id }}">D</button>
@@ -103,7 +103,7 @@
                 <div class="card-header">{{ __('Add comment') }}</div>
                 <div class="card-body">
                     @auth
-                        <form method="POST" action="{{ route('comment.store') }}">
+                        <form method="POST" action="{{ route('posts.comments.store', $post->slug) }}">
                             @csrf
                             <div class="row mb-3">
                                 <label for="description" class="col-md-4 col-form-label text-md-end">{{ __('You\'r comment') }}</label>
@@ -116,7 +116,6 @@
                                     @enderror
                                 </div>
                             </div>
-                            <input type="hidden" name="post_id" value="{{ $post->id }}">
                             <div class="row mb-0">
                                 <div class="col-md-6 offset-md-4">
                                     <button type="submit" class="btn btn-primary">

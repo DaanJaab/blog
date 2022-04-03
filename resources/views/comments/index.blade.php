@@ -31,17 +31,15 @@
                                     <td>{{ $comment->user_id . ' / ' . $comment->user->name }}</td>
                                     <td>{{ $comment->post_id }}</td>
                                     <td>
-                                        <a href="{{ route('comment.show', $comment->id) }}">
+                                        <a href="{{ route('posts.comments.show', [$comment->post->slug, $comment->id]) }}">
                                             <button class="btn btn-primary btn-sm">S</button></a>
-                                        @can('update-comment', $comment)
-                                            <a href="{{ route('comment.edit', $comment->id) }}">
+                                            <a href="{{ route('posts.comments.edit', [$comment->post->slug, $comment->id]) }}">
                                                 <button class="btn btn-success btn-sm">E</button></a>
-                                            <form method="post" class="delete_form" action="{{ route('comment.destroy', $comment->id) }}">
+                                            <form method="post" class="delete_form" action="{{ route('posts.comments.destroy', [$comment->post->slug, $comment->id]) }}">
                                                 @csrf
                                                 @method('delete')
                                                 <button type="submit" class="btn btn-danger btn-sm delete" data-id="{{ $comment->id }}">D</button>
                                             </form>
-                                        @endcan
                                     </td>
                                 </tr>
                             @endforeach

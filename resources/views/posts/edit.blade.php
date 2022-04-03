@@ -7,7 +7,7 @@
             <div class="card">
                 <div class="card-header">EDYCJA: {{ $post->title }}</div>
 
-                    <form method="POST" action="{{ route('blog.update', $post->slug) }}">
+                    <form method="POST" action="{{ route('posts.update', $post->slug) }}">
                         {{ method_field('PUT') }}
                         @csrf
                         <div class="row mb-3">

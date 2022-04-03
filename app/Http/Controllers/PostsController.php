@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Gate;
 
 use function PHPUnit\Framework\throwException;
 
-class PostController extends Controller
+class PostsController extends Controller
 {
 
     public function __construct()
@@ -24,7 +24,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        return view('blog.index')
+        return view('posts.index')
             ->with('posts', Post::latest()->with(['user', 'category'])->get());
     }
 
@@ -35,7 +35,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        return view('blog.create', [
+        return view('posts.create', [
             'categories' => PostsCategory::all()
         ]);
     }
@@ -67,78 +67,77 @@ class PostController extends Controller
 
         $post->save();
 
-        return redirect()->route('blog.index')
+        return redirect()->route('posts.index')
             ->with('message', ['success', 'Your post has been added!']);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  string  $slug
+     * @param  string  $post
      * @return \Illuminate\Http\Response
      */
-    public function show(Post $blog)
+    public function show($post)
     {
-        return view('blog.show')
-            ->with('post', Post::where('slug', $blog->slug)->with(['comments.user'])->firstOrFail());
+        return view('posts.show')
+            ->with('post', Post::where('slug', $post)->with(['comments.user'])->firstOrFail());
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  string  $slug
+     * @param  model  $post
      * @return \Illuminate\Http\Response
      */
-    public function edit(Post $blog)
+    public function edit(Post $post)
     {
-        if (!Gate::allows('update-post', $blog)) {
+        if (!Gate::allows('update-post', $post)) {
             abort(403, 'nie możesz edytować czyjegoś posta!');
         }
-        return view('blog.edit')
-            ->with('post', Post::where('slug', $blog->slug)->first());
+        return view('posts.edit')
+            ->with('post', $post);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  string  $slug
+     * @param  model  $post
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Post $blog)
+    public function update(Request $request, Post $post)
     {
-        if (!Gate::allows('update-post', $blog)) {
-            abort(403);
+        if (!Gate::allows('update-post', $post)) {
+            abort(403, 'nie możesz edytować czyjegoś posta!');
         }
         $request->validate([
             'title' => 'required',
             'description' => 'required',
         ]);
 
-        Post::where('slug', $blog->slug)
-            ->update([
-                'title' => $request->input('title'),
-                'description' => $request->input('description')
-            ]);
+        $post->update([
+            'title' => $request->input('title'),
+            'description' => $request->input('description')
+        ]);
 
-        return redirect()->route('blog.show', $blog->slug)
+        return redirect()->route('posts.show', $post->slug)
             ->with('message', ['success', 'Your post has been updated!']);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  string  $slug
+     * @param  model  $post
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Post $blog)
+    public function destroy(Post $post)
     {
-        if (!Gate::allows('update-post', $blog)) {
+        if (!Gate::allows('update-post', $post)) {
             abort(403, 'nie możesz usunąć czyjegoś posta!');
         }
-        $blog->delete();
+        $post->delete();
 
-        return redirect()->route('blog.index')
+        return redirect()->route('posts.index')
             ->with('message', ['danger', 'Your post has been deleted!']);
     }
 }

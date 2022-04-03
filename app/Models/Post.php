@@ -18,6 +18,8 @@ class Post extends Model
         // 'image_path',
         'category_id'
     ];
+    //protected $with = ['comments', 'user', 'category'];
+
 
     public function user()
     {

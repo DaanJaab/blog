@@ -6,7 +6,7 @@
         <div class="col-md-12">
             @include('layouts.messages_box')
             <div class="card">
-                <div class="card-header">{{ __('Profile') }}</div>
+                <div class="card-header">{{ __('users') }}</div>
                 <div class="card-body">
                     <table class="table table-hover">
                         <thead>
@@ -22,17 +22,17 @@
                         </tr>
                         </thead>
                         <tbody>
-                            @foreach($profiles as $profile)
+                            @foreach($users as $user)
                             <tr>
-                                <th scope="row">{{ $profile->id }}</th>
-                                <td>{{ $profile->name }}</td>
-                                <td>{{ $profile->email }}</td>
-                                <td>{{ $profile->role }}</td>
-                                <td>{{ $profile->description }}</td>
-                                <td>{{ $profile->created_at }}</td>
-                                <td>{{ $profile->updated_at }}</td>
+                                <th scope="row">{{ $user->id }}</th>
+                                <td>{{ $user->name }}</td>
+                                <td>{{ $user->email }}</td>
+                                <td>{{ $user->role }}</td>
+                                <td>{{ $user->description }}</td>
+                                <td>{{ $user->created_at }}</td>
+                                <td>{{ $user->updated_at }}</td>
                                 <td>
-                                    <a href="{{ route('profile.show', $profile->id) }}">
+                                    <a href="{{ route('users.show', $user->id) }}">
                                         <button class="btn btn-primary btn-sm">S</button></a>
                                 </td>
                             </tr>

@@ -8,7 +8,7 @@
             <div class="card">
                 <div class="card-header">{{ __('Blog') }}
                         <div class="col-md-1 offset-md-11">
-                            <a href="{{ route('blog.create') }}">
+                            <a href="{{ route('posts.create') }}">
                             <button class="btn btn-primary">
                                 {{ __('Dodaj posta') }}
                             </button></a>
@@ -41,12 +41,12 @@
                                 <td>{{ $post->user_id . ' / ' . $post->user->name }}</td>
                                 <td>{{ $post->category_id . ' / ' . $post->category->name }}</td>
                                 <td>
-                                    <a href="{{ route('blog.show', $post->slug) }}">
+                                    <a href="{{ route('posts.show', $post->slug) }}">
                                         <button class="btn btn-primary btn-sm">S</button></a>
                                     @can('update-post', $post)
-                                        <a href="{{ route('blog.edit', $post->slug) }}">
+                                        <a href="{{ route('posts.edit', $post->slug) }}">
                                             <button class="btn btn-success btn-sm">E</button></a>
-                                        <form method="post" class="delete_form" action="{{ route('blog.destroy', $post->slug) }}">
+                                        <form method="post" class="delete_form" action="{{ route('posts.destroy', $post->slug) }}">
                                             @csrf
                                             @method('delete')
                                             <button type="submit" class="btn btn-danger btn-sm delete" data-id="{{ $post->slug }}">D</button>

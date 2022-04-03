@@ -8,7 +8,7 @@
                 <div class="card-header">{{ __('Dodaj posta') }}</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('blog.store') }}" {{-- enctype="multipart/form-data" --}}>
+                    <form method="POST" action="{{ route('posts.store') }}" {{-- enctype="multipart/form-data" --}}>
                         @csrf
                         <div class="row mb-3">
                             <label for="title" class="col-md-4 col-form-label text-md-end">{{ __('Title') }}</label>

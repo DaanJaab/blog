@@ -8,9 +8,4 @@ use Illuminate\Database\Eloquent\Model;
 class Test extends Model
 {
     use HasFactory;
-
-    public function getRouteKeyName()
-    {
-        return 'name';
-    }
 }

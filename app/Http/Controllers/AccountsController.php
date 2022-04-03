@@ -5,14 +5,18 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
-class AccountController extends Controller
+class AccountsController extends Controller
 {
+
+    ##### ACCOUNTS HERE, USERS BELOW #####
 
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth', ['except' => ['show']]);
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -48,8 +52,7 @@ class AccountController extends Controller
         $request->validate([
             'description' => 'required',
         ]);
-        $user = User::find(auth()->user()->id);
-        $user->update([
+        auth()->user()->update([
             'description' => $request->input('description')
         ]);
 
@@ -65,11 +68,37 @@ class AccountController extends Controller
      */
     public function destroy()
     {
-        $user = User::find(auth()->user()->id);
+        auth()->user()->delete();
         Auth::logout();
-        $user->delete();
 
         return redirect()->route('login')
             ->with('message', ['danger', 'Your profile has been deleted!']);
+    }
+
+
+
+    ##### USERS #####
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function usersIndex()
+    {
+        return view('users.index')
+            ->with('users', User::all());
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  string  $user
+     * @return \Illuminate\Http\Response
+     */
+    public function show($user)
+    {
+        return view('users.show')
+            ->with('user', User::where('id', $user)->with(['posts', 'comments'])->firstOrFail());
     }
 }

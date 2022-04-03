@@ -1,8 +1,8 @@
 <?php
 
-use App\Http\Controllers\AccountController;
-use App\Http\Controllers\CommentController;
-use App\Http\Controllers\PostController;
+use App\Http\Controllers\AccountsController;
+use App\Http\Controllers\CommentsController;
+use App\Http\Controllers\PostsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Auth;
@@ -23,21 +23,21 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::controller(AccountController::class)->group(function () {
+Route::controller(AccountsController::class)->group(function () {
     Route::get('/account', 'index')->name('account.index');
     Route::get('/account/edit', 'edit')->name('account.edit');
     Route::put('/account', 'update')->name('account.update');
     Route::delete('/account', 'destroy')->name('account.destroy');
+
+    Route::get('/users', 'usersIndex')->name('users.index');
+    Route::get('/users/{user}', 'show')->name('users.show');
 });
-Route::resource('/blog', PostController::class);
-Route::resource('/comment', CommentController::class, [
+Route::get('/users/{post}/comments', [CommentsController::class, 'index'])->name('users.comments.index');
+Route::resource('/posts', PostsController::class);
+Route::resource('posts.comments', CommentsController::class, [
     'except' => ['create']
 ]);
-Route::resource('/profile', ProfileController::class, [
-    'only' => ['index', 'show']
-]);
-Route::get('/test/{key}', [TestController::class, 'show']);
-Route::post('/blog/{slug}/save', [TestController::class, 'store'])->name('store-comment');
+Route::resource('/test', TestController::class);
 
 Auth::routes();
 

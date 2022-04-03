@@ -29,9 +29,9 @@
                                     <td>{{ $comment->user_id . ' / ' . $comment->user->name }}</td>
                                     <td>{{ $comment->post_id }}</td>
                                     <td>
-                                        <a href="{{ route('comment.edit', $comment->id) }}">
+                                        <a href="{{ route('posts.comments.edit', [$post_slug, $comment->id]) }}">
                                             <button class="btn btn-success btn-sm">E</button></a>
-                                        <form method="post" class="delete_form" action="{{ route('comment.destroy', $comment->id) }}">
+                                        <form method="post" class="delete_form" action="{{ route('posts.comments.destroy', [$post_slug, $comment->id]) }}">
                                             @csrf
                                             @method('delete')
                                             <button type="submit" class="btn btn-danger btn-sm delete" data-id="{{ $comment->id }}">D</button>

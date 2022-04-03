@@ -24,22 +24,22 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <th scope="row">{{ $profile->id }}</th>
-                                <td>{{ $profile->name }}</td>
-                                <td>{{ $profile->email }}</td>
-                                <td>{{ $profile->role }}</td>
-                                <td>{{ $profile->description }}</td>
+                                <th scope="row">{{ $user->id }}</th>
+                                <td>{{ $user->name }}</td>
+                                <td>{{ $user->email }}</td>
+                                <td>{{ $user->role }}</td>
+                                <td>{{ $user->description }}</td>
                                 {{-- <td>{{ $post->image_path }}</td> --}}
-                                <td>{{ $profile->created_at }}</td>
-                                <td>{{ $profile->updated_at }}</td>
+                                <td>{{ $user->created_at }}</td>
+                                <td>{{ $user->updated_at }}</td>
                                 <td>
-                                    @can('update-user', $profile)
-                                        <a href="{{ route('profile.edit', $profile->id) }}">
+                                    @can('update-user', $user)
+                                        <a href="{{ route('account.edit', $user->id) }}">
                                             <button class="btn btn-success btn-sm">E</button></a>
-                                        <form method="post" class="delete_form" action="{{ route('profile.destroy', $profile->id) }}">
+                                        <form method="post" class="delete_form" action="{{ route('account.destroy', $user->id) }}">
                                             @csrf
                                             @method('delete')
-                                            <button type="submit" class="btn btn-danger btn-sm delete" data-id="{{ $profile->id }}">D</button>
+                                            <button type="submit" class="btn btn-danger btn-sm delete" data-id="{{ $user->id }}">D</button>
                                         </form>
                                     @endcan
                                 </td>
@@ -51,7 +51,7 @@
             <div class="card-header">{{ __('Posts') }}</div>
                 <div class="card">
                     <div class="card-body">
-                        @isset($profile->posts[0])
+                        @isset($user->posts[0])
                         <table class="table table-hover">
                             <thead>
                             <tr>
@@ -67,7 +67,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                                @foreach($profile->posts as $post)
+                                @foreach($user->posts as $post)
                                     <tr>
                                         <th scope="row">{{ $post->id }}</th>
                                         <td>{{ $post->slug }}</td>
@@ -78,12 +78,12 @@
                                         <td>{{ $post->user_id . ' / ' . $post->user->name }}</td>
                                         <td>{{ $post->category_id . ' / ' . $post->category->name }}</td>
                                         <td>
-                                            <a href="{{ route('blog.show', $post->slug) }}">
+                                            <a href="{{ route('posts.show', $post->slug) }}">
                                                 <button class="btn btn-primary btn-sm">S</button></a>
                                             @can('update-post', $post)
-                                                <a href="{{ route('blog.edit', $post->slug) }}">
+                                                <a href="{{ route('posts.edit', $post->slug) }}">
                                                     <button class="btn btn-success btn-sm">E</button></a>
-                                                <form method="post" class="delete_form" action="{{ route('blog.destroy', $post->slug) }}">
+                                                <form method="post" class="delete_form" action="{{ route('posts.destroy', $post->slug) }}">
                                                     @csrf
                                                     @method('delete')
                                                     <button type="submit" class="btn btn-danger btn-sm delete" data-id="{{ $post->slug }}">D</button>
@@ -103,10 +103,10 @@
                 </div>
 
 
-                <div class="card-header">{{ __('Comments') }}</div>
+                {{--  <div class="card-header">{{ __('Comments') }}</div>
                 <div class="card">
                     <div class="card-body">
-                        @isset($profile->comments[0])
+                        @isset($user->comments[0])
                         <table class="table table-hover">
                             <thead>
                             <tr>
@@ -120,7 +120,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                                @foreach($profile->comments as $comment)
+                                @foreach($user->comments as $comment)
                                     <tr>
                                         <th scope="row">{{ $comment->id }}</th>
                                         <td>{{ $comment->description }}</td>
@@ -129,12 +129,12 @@
                                         <td>{{ $comment->user_id . ' / ' . $comment->user->name }}</td>
                                         <td>{{ $comment->post_id }}</td>
                                         <td>
-                                            <a href="{{ route('comment.show', $comment->id) }}">
+                                            <a href="{{ route('posts.comments.show', [$user->posts['id' = $comment->post_id]->slug, $comment->id]) }}">
                                                 <button class="btn btn-primary btn-sm">S</button></a>
                                             @can('update-comment', $comment)
-                                                <a href="{{ route('comment.edit', $comment->id) }}">
+                                                <a href="{{ route('posts.comments.edit', [$user->posts['id' = $comment->post_id]->slug, $comment->id]) }}">
                                                     <button class="btn btn-success btn-sm">E</button></a>
-                                                <form method="post" class="delete_form" action="{{ route('comment.destroy', $comment->id) }}">
+                                                <form method="post" class="delete_form" action="{{ route('posts.comments.destroy', [$user->posts['id' = $comment->post_id]->slug, $comment->id]) }}">
                                                     @csrf
                                                     @method('delete')
                                                     <button type="submit" class="btn btn-danger btn-sm delete" data-id="{{ $comment->id }}">D</button>
@@ -151,7 +151,7 @@
                             </div>
                         @endisset
                     </div>
-                </div>
+                </div>--}}
         </div>
     </div>
 </div>
