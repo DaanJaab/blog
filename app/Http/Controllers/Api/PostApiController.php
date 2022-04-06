@@ -4,11 +4,17 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Post;
+use App\Models\User;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 use Illuminate\Http\Request;
 
 class PostApiController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:sanctum', ['except' => ['show']]);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -17,6 +23,33 @@ class PostApiController extends Controller
     public function index()
     {
         return Post::all();
+    }
+
+    public function login(Request $request)
+    {
+        $request->validate([
+            'email' => 'email|required',
+            'password' => 'required'
+        ]);
+
+        $crudentials = request(['email', 'password']);
+        if (!auth()->attempt($crudentials)) {
+            return response()->json([
+                'message' => 'invalid data',
+                'errors' => [
+                    'password' => [
+                        'Invalid crudentials'
+                    ],
+                ]
+            ], 422);
+        }
+
+        $user = User::where('email', $request->email)->first();
+        $authToken = $user->createToken('auth-token')->plainTextToken;
+
+        return response()->json([
+            'access_token' => $authToken,
+        ]);
     }
 
     /**

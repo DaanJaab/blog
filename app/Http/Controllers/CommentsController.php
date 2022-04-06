@@ -6,8 +6,6 @@ use App\Http\Requests\StoreCommentRequest;
 use App\Http\Requests\UpdateCommentRequest;
 use App\Models\Comment;
 use App\Models\Post;
-use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
 class CommentsController extends Controller
@@ -32,18 +30,6 @@ class CommentsController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
-     *
-     * @param  object  $post
-     * @return \Illuminate\Http\Response
-     */
-    public function indexByUser(User $user)
-    {
-        return view('comments.index')
-            ->with('comments', Comment::where('user_id', $user->id)->with(['user', 'post'])->paginate());
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -65,27 +51,35 @@ class CommentsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  string  $post_slug
+     * @param  object  $post
      * @param  object  $comment
      * @return \Illuminate\Http\Response
      */
-    public function show($post_slug, Comment $comment)
+    public function show(Post $post, Comment $comment)
     {
-        return view('comments.show', compact('post_slug'))
+        if ($post->id != $comment->post_id) {
+            abort(403, 'ten komentarz nie należy do tego posta!');
+        }
+        return view('comments.show', compact('post'))
             ->with('comment', $comment);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  string  $post_slug
+     * @param  object  $post
      * @param  object  $comment
      * @return \Illuminate\Http\Response
      */
-    public function edit($post_slug, Comment $comment)
+    public function edit(Post $post, Comment $comment)
     {
-
-        return view('comments.edit', compact('post_slug'))
+        if (!Gate::allows('update-comment', $comment)) {
+            abort(403, 'nie możesz edytować czyjegoś komentarza!');
+        }
+        if ($post->id != $comment->post_id) {
+            abort(403, 'ten komentarz nie należy do tego posta!');
+        }
+        return view('comments.edit', compact('post'))
             ->with('comment', $comment);
     }
 
@@ -93,17 +87,17 @@ class CommentsController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  string  $post_slug
+     * @param  object  $post
      * @param  object  $comment
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateCommentRequest $request, $post_slug, Comment $comment)
+    public function update(UpdateCommentRequest $request, Post $post, Comment $comment)
     {
         $comment->update([
             'description' => $request->input('description')
         ]);
 
-        return redirect()->route('posts.show', $post_slug)
+        return redirect()->route('posts.show', $post->slug)
             ->with('message', ['success', 'Your comment has been updated!']);
     }
 

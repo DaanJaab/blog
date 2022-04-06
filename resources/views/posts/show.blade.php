@@ -12,7 +12,6 @@
                         <thead>
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col">Slug</th>
                             <th scope="col">Title</th>
                             <th scope="col">Description</th>
                             {{-- <thscope="col">Image_path</th> --}}
@@ -26,7 +25,6 @@
                         <tbody>
                             <tr>
                                 <th scope="row">{{ $post->id }}</th>
-                                <td>{{ $post->slug }}</td>
                                 <td>{{ $post->title }}</td>
                                 <td>{{ $post->description }}</td>
                                 {{-- <td>{{ $post->image_path }}</td> --}}
@@ -50,8 +48,8 @@
                     </table>
                 </div>
             </div>
-            <div class="card-header">{{ __('Comments') }}</div>
-                <div class="card">
+            <div class="card">
+                <div class="card-header">{{ __('Comments') }}</div>
                     <div class="card-body">
                         @isset($post->comments[0])
                         <table class="table table-hover">

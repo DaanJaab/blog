@@ -7,11 +7,11 @@
             @include('layouts.messages_box')
             <div class="card">
                 <div class="card-header">{{ __('Blog') }}
-                        <div class="col-md-1 offset-md-11">
-                            <a href="{{ route('posts.create') }}">
-                            <button class="btn btn-primary">
-                                {{ __('Dodaj posta') }}
-                            </button></a>
+                    <div class="col-md-1 offset-md-11">
+                        <a href="{{ route('posts.create') }}">
+                        <button class="btn btn-primary">
+                            {{ __('Dodaj posta') }}
+                        </button></a>
                     </div>
                 </div>
                 <div class="card-body">
@@ -19,13 +19,12 @@
                         <thead>
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col">Slug</th>
                             <th scope="col">Title</th>
                             <th scope="col">Description</th>
                             <th scope="col">Created_at</th>
                             <th scope="col">Updated_at</th>
-                            <th scope="col">User ID / name</th>
-                            <th scope="col">Category ID / name</th>
+                            <th scope="col">User name</th>
+                            <th scope="col">Category  name</th>
                             <th scope="col">Akcje</th>
                         </tr>
                         </thead>
@@ -33,13 +32,12 @@
                             @foreach($posts as $post)
                             <tr>
                                 <th scope="row">{{ $post->id }}</th>
-                                <td>{{ $post->slug }}</td>
                                 <td>{{ $post->title }}</td>
                                 <td>{{ $post->description }}</td>
                                 <td>{{ $post->created_at }}</td>
                                 <td>{{ $post->updated_at }}</td>
-                                <td>{{ $post->user_id . ' / ' . $post->user->name }}</td>
-                                <td>{{ $post->category_id . ' / ' . $post->category->name }}</td>
+                                <td>{{ $post->user->name }}</td>
+                                <td>{{ $post->category->name }}</td>
                                 <td>
                                     <a href="{{ route('posts.show', $post->slug) }}">
                                         <button class="btn btn-primary btn-sm">S</button></a>

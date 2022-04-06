@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdateAccountRequest;
+use App\Models\Comment;
+use App\Models\Post;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
@@ -77,7 +79,7 @@ class AccountsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function usersIndex()
+    public function showUsers()
     {
         return view('users.index')
             ->with('users', User::paginate());
@@ -86,12 +88,39 @@ class AccountsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $user_id
+     * @param  object  $user
      * @return \Illuminate\Http\Response
      */
-    public function show($user_id)
+    public function show(User $user)
     {
         return view('users.show')
-            ->with('user', User::where('id', $user_id)->with(['posts', 'comments'])->firstOrFail());
+            ->with('user', $user)
+            ->with('postsSum', Post::where('user_id', $user->id)->count())
+            ->with('commentsSum', Comment::where('user_id', $user->id)->count());
+    }
+
+
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @param  object  $user
+     * @return \Illuminate\Http\Response
+     */
+    public function showUserPosts(User $user)
+    {
+        return view('posts.index')
+            ->with('posts', Post::where('user_id', $user->id)->latest()->with(['user', 'category'])->paginate());
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @param  object  $user
+     * @return \Illuminate\Http\Response
+     */
+    public function showUserComments(User $user)
+    {
+        return view('comments.index')->with('comments', Comment::where('user_id', $user->id)->latest()->with(['user', 'post'])->paginate());
     }
 }

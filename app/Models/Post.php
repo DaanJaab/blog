@@ -33,7 +33,7 @@ class Post extends Model
 
     public function category()
     {
-        return $this->belongsTo(PostsCategory::class)->select('id', 'name');
+        return $this->belongsTo(PostsCategory::class, 'category_id', 'id')->select('id', 'name');
     }
 
     public function getRouteKeyName()

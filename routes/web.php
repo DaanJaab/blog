@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AccountsController;
+use App\Http\Controllers\BlogsController;
 use App\Http\Controllers\CommentsController;
 use App\Http\Controllers\PostsController;
 use App\Http\Controllers\TestController;
@@ -28,10 +29,17 @@ Route::controller(AccountsController::class)->group(function () {
     Route::put('/account', 'update')->name('account.update');
     Route::delete('/account', 'destroy')->name('account.destroy');
 
-    Route::get('/users', 'usersIndex')->name('users.index');
+    Route::get('/users', 'showUsers')->name('users.index');
     Route::get('/users/{user}', 'show')->name('users.show');
+    Route::get('/users/{user}/posts', 'showUserPosts')->name('users.posts.index');
+    Route::get('/users/{user}/comments', 'showUserComments')->name('users.comments.index');
 });
-Route::get('/users/{user}/comments', [CommentsController::class, 'indexByUser'])->name('users.comments.index');
+
+Route::get('/blog', [BlogsController::class, 'index'])->name('blog.index');
+Route::get('/blog/{category}', [BlogsController::class, 'show'])->name('blog.show');
+Route::get('/blog/{category}/create', [PostsController::class, 'createWithSpecificCategory'])->name('blog.posts.create');
+Route::post('/blog/{category?}', [PostsController::class, 'store'])->name('blog.posts.store');
+
 Route::resource('/posts', PostsController::class);
 Route::resource('posts.comments', CommentsController::class, [
     'except' => ['create']

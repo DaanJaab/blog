@@ -23,11 +23,21 @@ class StorePostRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'title' => 'required',
-            'description' => 'required',
-            'category' => 'required',
-            // 'image' => 'required|mimes:jpg,png,jpeg|max:5048'
-        ];
+        if (!request()->input('category')) {
+            $rules = [
+                'title' => 'required',
+                'description' => 'required'
+            ];
+        } else {
+            $rules = [
+                'title' => 'required',
+                'description' => 'required',
+                'category' => 'required'
+            ];
+        }
+        //dd(request()->input('category'));
+        //$this->route('category')
+        //request()->category
+        return $rules;
     }
 }

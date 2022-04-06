@@ -40,12 +40,22 @@ class PostsController extends Controller
     }
 
     /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function createWithSpecificCategory(PostsCategory $category)
+    {
+        return view('posts.createWithSpecificCategory', compact('category'));
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StorePostRequest $request)
+    public function store(StorePostRequest $request, $category = null)
     {
         // $newImageName = SlugService::createSlug(Post::class, 'slug', $request->title) . '-' . uniqid() . '.' . $request->image->extension();
         // $request->image->move(public_path('images'), $newImageName);
@@ -56,7 +66,7 @@ class PostsController extends Controller
         $post->description = $request->input('description');
         $post->slug = SlugService::createSlug(Post::class, 'slug', $request->title);
         // $post->image_path = $newImageName;
-        $post->category_id = $request->category;
+        $post->category_id = $request->category; // take category from request, or if not exist take from route
 
         $post->save();
 

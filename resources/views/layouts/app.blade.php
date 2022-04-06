@@ -62,6 +62,7 @@
                                         <a class="dropdown-item" href="/test">Test admin</a>
                                     @endcan
                                     <a class="dropdown-item" href="{{ route('account.index') }}">Konto</a>
+                                    <a class="dropdown-item" href="{{ route('users.index') }}">Lista użytkowników</a>
                                     <a class="dropdown-item" href="{{ route('posts.index') }}">Posty</a>
                                     <a class="dropdown-item" href="">...</a>
                                     <a class="dropdown-item" href="{{ route('logout') }}"

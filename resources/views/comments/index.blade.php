@@ -16,8 +16,8 @@
                             <th scope="col">Description</th>
                             <th scope="col">Created_at</th>
                             <th scope="col">Updated_at</th>
-                            <th scope="col">User ID / name</th>
-                            <th scope="col">Post ID</th>
+                            <th scope="col">User name</th>
+                            <th scope="col">Post title</th>
                             <th scope="col">Akcje</th>
                         </tr>
                         </thead>
@@ -28,10 +28,11 @@
                                     <td>{{ $comment->description }}</td>
                                     <td>{{ $comment->created_at }}</td>
                                     <td>{{ $comment->updated_at }}</td>
-                                    <td>{{ $comment->user_id . ' / ' . $comment->user->name }}</td>
-                                    <td>{{ $comment->post_id }}</td>
+                                    <td>{{ $comment->user->name }}</td>
+                                    <td>{{ $comment->post->title }}</td>
                                     <td>
-                                        <a href="{{ route('posts.comments.show', [$comment->post->slug, $comment->id]) }}">
+                                        @can('update-comment', $comment)
+                                            <a href="{{ route('posts.comments.show', [$comment->post->slug, $comment->id]) }}">
                                             <button class="btn btn-primary btn-sm">S</button></a>
                                             <a href="{{ route('posts.comments.edit', [$comment->post->slug, $comment->id]) }}">
                                                 <button class="btn btn-success btn-sm">E</button></a>
@@ -40,6 +41,7 @@
                                                 @method('delete')
                                                 <button type="submit" class="btn btn-danger btn-sm delete" data-id="{{ $comment->id }}">D</button>
                                             </form>
+                                        @endcan
                                     </td>
                                 </tr>
                             @endforeach

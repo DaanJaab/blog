@@ -10,6 +10,8 @@ class PostsCategory extends Model
 {
     use HasFactory;
 
+    protected $table = 'posts_categories';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -19,8 +21,13 @@ class PostsCategory extends Model
         'name'
     ];
 
-    public function post(): HasMany
+    public function posts(): HasMany
     {
-        return $this->hasMany(Post::class);
+        return $this->hasMany(Post::class, 'category_id', 'id');
+    }
+
+    public function getRouteKeyName()
+    {
+        return 'name';
     }
 }
