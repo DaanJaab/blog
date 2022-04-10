@@ -38,7 +38,7 @@ Route::controller(AccountsController::class)->group(function () {
 Route::get('/blog', [BlogsController::class, 'index'])->name('blog.index');
 Route::get('/blog/{category}', [BlogsController::class, 'show'])->name('blog.show');
 Route::get('/blog/{category}/create', [PostsController::class, 'createWithSpecificCategory'])->name('blog.posts.create');
-Route::post('/blog/{category?}', [PostsController::class, 'store'])->name('blog.posts.store');
+Route::post('/blog/{category}', [PostsController::class, 'store'])->name('blog.posts.store');
 
 Route::resource('/posts', PostsController::class);
 Route::resource('posts.comments', CommentsController::class, [

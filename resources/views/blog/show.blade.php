@@ -41,13 +41,11 @@
                                     <td>{{ $post->user->name }}</td>
                                     <td>{{ $post->comments->count() }}</td>
                                     <th>
-                                        @php
-                                            if (null !== $post->comments->last()) {
-                                                echo $post->comments->last()->created_at . ', przez ' . $post->comments->last()->user->name;
-                                            } else {
-                                                echo 'Brak komentarzy';
-                                            }
-                                        @endphp
+                                        @if (null !== $post->comments->last())
+                                            {{ $post->comments->last()->created_at }}, przez {{ $post->comments->last()->user->name }}
+                                        @else
+                                            Brak komentarzy
+                                        @endif
                                     </th>
                                     <td>
                                         <a href="{{ route('posts.show', $post->slug) }}">

@@ -22,13 +22,11 @@
                                     <th scope="row"><a href="{{ route('blog.show', $category->name) }}">{{ $category->name }}</a></th>
                                     <th>Liczba postów: {{ $category->posts->count() }}</th>
                                     <th>
-                                        @php
-                                            if (null !== $category->posts->last()) {
-                                                echo 'Najnowszy post napisano: '. $category->posts->last()->created_at . ', przez ' . $category->posts->last()->user->name;
-                                            } else {
-                                                echo 'Brak postów';
-                                            }
-                                        @endphp
+                                        @if (null !== $category->posts->last())
+                                            Najnowszy post napisano: {{ $category->posts->last()->created_at }}, przez {{ $category->posts->last()->user->name }}
+                                        @else
+                                            Brak postów
+                                        @endif
                                     </th>
                                 </tr>
                             @endforeach

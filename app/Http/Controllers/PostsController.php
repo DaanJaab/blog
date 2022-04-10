@@ -53,6 +53,7 @@ class PostsController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     * @param  int  $category
      * @return \Illuminate\Http\Response
      */
     public function store(StorePostRequest $request, $category = null)
