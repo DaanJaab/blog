@@ -6,7 +6,7 @@
         <div class="col-md-12">
             @include('layouts.messages_box')
             <div class="card">
-                <div class="card-header">{{ __('Blog') }}
+                <div class="card-header">{{ __('blog.page_index_title') }}
                     <div class="col-md-1 offset-md-11">
                         <a href="{{ route('posts.create') }}">
                         <button class="btn btn-primary">

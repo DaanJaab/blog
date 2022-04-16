@@ -16,10 +16,11 @@ class BlogsController extends Controller
      */
     public function index()
     {
-        return view('blog.index')
-            ->with('categories', PostsCategory::with('posts.user')->get())
-            ->with('postsCount', Post::count())
-            ->with('commentsCount', Comment::count());
+        return view('blog.index', [
+            'categories' => PostsCategory::withCount('posts', 'comments')->with('posts.user')->get(),
+            'allPostsCount' => Post::count(),
+            'allCommentsCount' => Comment::count()
+        ]);
     }
 
     /**
@@ -51,9 +52,9 @@ class BlogsController extends Controller
      */
     public function show(PostsCategory $category)
     {
-        //dd(Post::where('category_id', $category->id)->latest()->with(['user', 'category'])->get());
-        return view('blog.show', compact('category'))
-            ->with('posts', Post::where('category_id', $category->id)->latest()->with(['user', 'comments.user'])->get());
+        $posts = Post::where('category_id', $category->id)->withCount('comments')->with('user', 'latestComment.user')->latest()->paginate(config('blog.pagination_posts'));
+
+        return view('blog.show', compact('category', 'posts'));
     }
 
     /**

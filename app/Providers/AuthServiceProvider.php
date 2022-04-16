@@ -7,8 +7,8 @@ use App\Models\Comment;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\Gate;
-use Symfony\Component\HttpKernel\Profiler\Profile;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -30,6 +30,14 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
+        Gate::define('user-exhausted', function (User $user) {
+            if ($user->last_action_time > now()->addSeconds(-config('blog.exhausted_time'))->toDateTimeString()) {
+                throw new HttpResponseException(redirect()->back()->withInput()
+                    ->with('message', ['danger', __('global.exhausted')]));
+            } else {
+                return true;
+            }
+        });
         Gate::define('update-user', function (User $user, User $auth_user) {
             return ($user->id === $auth_user->id);
         });
@@ -45,7 +53,7 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('isModer', function (User $user) {
             return ($user->id === UserRole::MODER);
         });
-        Gate::before(function (User $user) { // dopuszcza admin we wszystkich autoryzacjach!
+        Gate::before(function (User $user) { // dopuszcza admina we wszystkich autoryzacjach!
             if ($user->role === UserRole::ADMIN) {
                 return true;
             }

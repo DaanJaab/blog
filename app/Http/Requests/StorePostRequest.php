@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
 class StorePostRequest extends FormRequest
 {
@@ -13,7 +14,7 @@ class StorePostRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return (auth()->check() && Gate::allows('user-exhausted'));
     }
 
     /**
@@ -25,19 +26,17 @@ class StorePostRequest extends FormRequest
     {
         if (!request()->input('category')) {
             $rules = [
-                'title' => 'required',
-                'description' => 'required'
+                'title' => 'required|max:80',
+                'text' => 'required|max:4000'
             ];
         } else {
             $rules = [
-                'title' => 'required',
-                'description' => 'required',
-                'category' => 'required'
+                'title' => 'required|max:80',
+                'text' => 'required|max:4000',
+                'category' => 'required|exists:posts_categories,id'
             ];
         }
-        //dd(request()->input('category'));
-        //$this->route('category')
-        //request()->category
+
         return $rules;
     }
 }

@@ -15,13 +15,13 @@ return new class extends Migration
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
-            $table->string('slug');
-            $table->string('title', 50);
-            $table->longText('description');
-            // $table->string('image_path');
+            $table->string('slug', 85)->unique();
+            $table->string('title', 80);
+            $table->string('text', 4000);
             $table->timestamps();
             $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->softDeletes();
         });
     }
 

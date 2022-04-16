@@ -18,7 +18,8 @@ class PostsCategory extends Model
      * @var array
      */
     protected $fillable = [
-        'name'
+        'name',
+        'description'
     ];
 
     public function posts(): HasMany
@@ -26,8 +27,13 @@ class PostsCategory extends Model
         return $this->hasMany(Post::class, 'category_id', 'id');
     }
 
+    public function comments()
+    {
+        return $this->hasManyThrough(Comment::class, Post::class, 'category_id', 'post_id', 'id', 'id');
+    }
+
     public function getRouteKeyName()
     {
-        return 'name';
+        return 'name_slug';
     }
 }

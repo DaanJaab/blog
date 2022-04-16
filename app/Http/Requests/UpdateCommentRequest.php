@@ -15,7 +15,7 @@ class UpdateCommentRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->can('update-comment', $this->route('comment'));
+        return (auth()->check() && auth()->user()->can('update-comment', $this->route('comment')) && Gate::allows('user-exhausted'));
     }
 
     /**
@@ -26,7 +26,7 @@ class UpdateCommentRequest extends FormRequest
     public function rules()
     {
         return [
-            'description' => 'required'
+            'text' => 'required|max:4000'
         ];
     }
 }

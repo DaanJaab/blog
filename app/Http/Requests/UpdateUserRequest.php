@@ -3,8 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
-class UpdateAccountRequest extends FormRequest
+class UpdateUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +14,7 @@ class UpdateAccountRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->can('update-user', auth()->user());
+        return (auth()->check() && auth()->user()->can('update-user', auth()->user()) && Gate::allows('user-exhausted'));
     }
 
     /**
@@ -24,7 +25,7 @@ class UpdateAccountRequest extends FormRequest
     public function rules()
     {
         return [
-            'description' => 'required'
+            'footer' => 'required|max:400'
         ];
     }
 }

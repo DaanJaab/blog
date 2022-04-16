@@ -2,109 +2,99 @@
 
 @section('content')
 <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-12">
+    <div class="row">
+        <div class="col-lg-12">
             @include('layouts.messages_box')
-            <div class="card">
-                <div class="card-header">{{ __('Blog') }}
-                    <div class="col-md-2 offset-md-10">
-                        <a href="{{ route('blog.posts.create', $category->name) }}">
-                        <button class="btn btn-primary">
-                            {{ __('Dodaj posta w tym dziale') }}
-                        </button></a>
+            <div class="wrapper wrapper-content animated fadeInRight">
+
+                <div class="ibox-content m-b-sm border-bottom">
+                    <div class="p-xs">
+                        <div class="pull-left m-r-md">
+                            <i class="fa fa-globe text-navy mid-icon"></i>
+                        </div>
+                        <div class="pull-right m-r-md">
+                            <a href="{{ route('blog.posts.create', $category->name) }}">
+                                <button class="btn btn-primary">
+                                    {{ __('blog.buttons.add_post_in_this_category') }}
+                                </button>
+                            </a>
+                        </div>
+                        <h2>{{ $category->name }}</h2>
+                        <span>{{ $category->description }}</span>
+
                     </div>
                 </div>
-                <div class="card-body">
-                    @isset($posts[0])
-                    <table class="table table-hover">
-                        <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Title</th>
-                            <th scope="col">Description</th>
-                            <th scope="col">Created_at</th>
-                            <th scope="col">Updated_at</th>
-                            <th scope="col">User name</th>
-                            <th scope="col">Liczba komentarzy</th>
-                            <th scope="col">Ostatni komentarz z</th>
-                            <th scope="col">Akcje</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($posts as $post)
-                                <tr>
-                                    <th scope="row">{{ $post->id }}</th>
-                                    <td>{{ $post->title }}</td>
-                                    <td>{{ $post->description }}</td>
-                                    <td>{{ $post->created_at }}</td>
-                                    <td>{{ $post->updated_at }}</td>
-                                    <td>{{ $post->user->name }}</td>
-                                    <td>{{ $post->comments->count() }}</td>
-                                    <th>
-                                        @if (null !== $post->comments->last())
-                                            {{ $post->comments->last()->created_at }}, przez {{ $post->comments->last()->user->name }}
-                                        @else
-                                            Brak komentarzy
-                                        @endif
-                                    </th>
-                                    <td>
-                                        <a href="{{ route('posts.show', $post->slug) }}">
-                                            <button class="btn btn-primary btn-sm">S</button></a>
-                                        @can('update-post', $post)
-                                            <a href="{{ route('posts.edit', $post->slug) }}">
-                                                <button class="btn btn-success btn-sm">E</button></a>
-                                            <form method="post" class="delete_form" action="{{ route('posts.destroy', $post->slug) }}">
-                                                @csrf
-                                                @method('delete')
-                                                <button type="submit" class="btn btn-danger btn-sm delete" data-id="{{ $post->slug }}">D</button>
-                                            </form>
-                                        @endcan
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                    @else
-                        <div class="row mb-0">
-                            <label for="description" class="col-form-label text-md-center">{{ __('W tym dziale nie ma postów.') }}</label>
-                        </div>
-                    @endisset
-                </div>
-            </div>
 
-            {{--  <div class="card">
-                <div class="card-header">{{ __('Add post') }}</div>
-                <div class="card-body">
-                    @auth
-                        <form method="POST" action="{{ route('posts.comments.store', $post->slug) }}">
-                            @csrf
-                            <div class="row mb-3">
-                                <label for="description" class="col-md-4 col-form-label text-md-end">{{ __('You\'r comment') }}</label>
-                                <div class="col-md-6">
-                                    <textarea id="description" maxlength="1500" class="form-control @error('description') is-invalid @enderror" name="description"></textarea>
-                                    @error('description')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
+                <a class="pagination">{{ $posts->onEachSide(1)->links() }}</a>
+                <div class="ibox-content forum-container">
+                    @forelse ($posts as $post)
+                        <div class="forum-item active">
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <div class="forum-icon">
+                                        <i class="fa fa-shield"></i>
+                                    </div>
+                                    <a href="{{ route('posts.show', $post->slug) }}" class="forum-item-title">{{ $post->title }}</a>
+                                    <div class="forum-sub-title">{{ __('blog.posts.by') }}
+                                        <a href="{{ route('users.show', $post->user->name_slug) }}">
+                                            @if ($post->user->role === \App\Enums\UserRole::ADMIN)
+                                                <span class="text-danger">{{ $post->user->name }}</span>
+                                            @else
+                                               {{ $post->user->name }}
+                                            @endif
+                                        </a>
+                                        {{ __('blog.posts.create_date') . $post->created_at->format('d-m-Y') }}
+                                    </div>
+                                </div>
+                                <div class="col-md-1 forum-info">
+                                    <span class="views-number">
+                                        {{ $post->comments_count }}
+                                    </span>
+                                    <div>
+                                        <small>{{ __('blog.comments.quantity') }}</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-1 forum-info">
+                                    <span class="views-last">
+                                        @if (null !== $post->latestComment)
+                                            @php
+                                                if (strlen($post->latestComment->user->name) >= 12) {
+                                                    $user_name = substr($post->latestComment->user->name, 0, 12) . '...';
+                                                } else {
+                                                    $user_name = $post->latestComment->user->name;
+                                                }
+                                            @endphp
+                                            <a href="{{ route('users.show', $post->latestComment->user->name_slug) }}">
+                                            @if ($post->latestComment->user->role === \App\Enums\UserRole::ADMIN)
+                                                <span class="text-danger">{{ $user_name }}</span>
+                                            @else
+                                               {{ $user_name }}
+                                            @endif
+                                            </a>
+                                        @else
+                                            --
+                                        @endif
+                                    </span>
+                                    <div>
+                                        <small>
+                                            @if (null !== $post->latestComment)
+                                                {{ $post->latestComment->created_at->format('d-m-Y') }}
+                                            @else
+                                            {{ __('blog.comments.none') }}
+                                            @endif
+                                        </small>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="row mb-0">
-                                <div class="col-md-6 offset-md-4">
-                                    <button type="submit" class="btn btn-primary">
-                                        {{ __('Add post') }}
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
-                    @endauth
-                    @guest
-                        <div class="row mb-0">
-                            <label for="description" class="col-form-label text-md-center">{{ __('Must login to put a post!') }}</label>
                         </div>
-                    @endguest
+                    @empty
+                        <div class="row mb-0">
+                            <label for="description" class="col-form-label text-md-center">{{ __('blog.posts.none_in_category') }}</label>
+                        </div>
+                    @endforelse
                 </div>
-            </div>--}}
+                <a class="pagination">{{ $posts->onEachSide(1)->links() }}</a>
+            </div>
         </div>
     </div>
 </div>

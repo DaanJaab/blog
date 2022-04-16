@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\UpdateAccountRequest;
+use App\Http\Requests\UpdateUserRequest;
 use App\Models\Comment;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
-class AccountsController extends Controller
+class UsersController extends Controller
 {
 
-    ##### ACCOUNTS HERE, USERS BELOW #####
+    ##### OWN ACCOUNT HERE, USERS BELOW #####
 
     public function __construct()
     {
@@ -43,14 +43,12 @@ class AccountsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  UpdateUserRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateAccountRequest $request)
+    public function update(UpdateUserRequest $request)
     {
-        auth()->user()->update([
-            'description' => $request->input('description')
-        ]);
+        auth()->user()->update($request->validated());
 
         return redirect()->route('account.index')
             ->with('message', ['success', 'Your account has been updated!']);
@@ -93,13 +91,12 @@ class AccountsController extends Controller
      */
     public function show(User $user)
     {
-        return view('users.show')
-            ->with('user', $user)
-            ->with('postsSum', Post::where('user_id', $user->id)->count())
-            ->with('commentsSum', Comment::where('user_id', $user->id)->count());
+        return view('users.show', [
+            'user' => $user,
+            'postsSum' => Post::where('user_id', $user->id)->count(),
+            'commentsSum' => Comment::where('user_id', $user->id)->count()
+        ]);
     }
-
-
 
     /**
      * Display a listing of the resource.

@@ -26,26 +26,23 @@ class CommentsController extends Controller
     public function index(Post $post)
     {
         return view('comments.index')
-            ->with('comments', Comment::where('post_id', $post->id)->with(['user', 'post'])->paginate());
+            ->with('comments', Comment::where('post_id', $post->id)->with(['user', 'post'])->paginate(config('blog.pagination_items')));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  StoreCommentRequest  $request
      * @param  object  $post
      * @return \Illuminate\Http\Response
+     * @info Observer included!
      */
     public function store(StoreCommentRequest $request, Post $post)
     {
-        $comment = new Comment;
-        $comment->user_id = auth()->user()->id;
-        $comment->description = $request->input('description');
-        $comment->post_id = $post->id;
-        $comment->save();
+        Comment::create($request->validated());
 
-        return redirect()->route('posts.show', $post->slug)
-            ->with('message', ['success', 'Your comment has been added!']);
+        return redirect()->back()
+            ->with('message', ['success', __('comments.messages.has_been_added')]);
     }
 
     /**
@@ -58,7 +55,7 @@ class CommentsController extends Controller
     public function show(Post $post, Comment $comment)
     {
         if ($post->id != $comment->post_id) {
-            abort(403, 'ten komentarz nie należy do tego posta!');
+            abort(403, __('comments.errors.not_belongs_to_this_post'));
         }
         return view('comments.show', compact('post'))
             ->with('comment', $comment);
@@ -74,10 +71,10 @@ class CommentsController extends Controller
     public function edit(Post $post, Comment $comment)
     {
         if (!Gate::allows('update-comment', $comment)) {
-            abort(403, 'nie możesz edytować czyjegoś komentarza!');
+            abort(403, __('comments.errors.not_own_edit'));
         }
         if ($post->id != $comment->post_id) {
-            abort(403, 'ten komentarz nie należy do tego posta!');
+            abort(403, __('comments.errors.not_belongs_to_this_post'));
         }
         return view('comments.edit', compact('post'))
             ->with('comment', $comment);
@@ -86,19 +83,18 @@ class CommentsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  UpdateCommentRequest  $request
      * @param  object  $post
      * @param  object  $comment
      * @return \Illuminate\Http\Response
+     * @info Observer included!
      */
     public function update(UpdateCommentRequest $request, Post $post, Comment $comment)
     {
-        $comment->update([
-            'description' => $request->input('description')
-        ]);
+        $comment->update($request->validated());
 
         return redirect()->route('posts.show', $post->slug)
-            ->with('message', ['success', 'Your comment has been updated!']);
+            ->with('message', ['success', __('comments.messages.has_been_updated')]);
     }
 
     /**
@@ -111,11 +107,11 @@ class CommentsController extends Controller
     public function destroy($post_slug, Comment $comment)
     {
         if (!Gate::allows('update-comment', $comment)) {
-            abort(403, 'nie możesz usunąć czyjegoś komentarza!');
+            abort(403, __('comments.errors.not_own_delete'));
         }
         $comment->delete();
 
-        return redirect()->route('posts.show', $post_slug)
-            ->with('message', ['danger', 'Your comment has been deleted!']);
+        return redirect()->back()
+            ->with('message', ['danger', __('comments.messages.has_been_deleted')]);
     }
 }

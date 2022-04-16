@@ -32,7 +32,7 @@
                                 <td>{{ $user->created_at }}</td>
                                 <td>{{ $user->updated_at }}</td>
                                 <td>
-                                    <a href="{{ route('users.show', $user->id) }}">
+                                    <a href="{{ route('users.show', $user->name) }}">
                                         <button class="btn btn-primary btn-sm">S</button></a>
                                 </td>
                             </tr>

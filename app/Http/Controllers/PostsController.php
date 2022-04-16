@@ -6,7 +6,6 @@ use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Models\Post;
 use App\Models\PostsCategory;
-use Cviebrock\EloquentSluggable\Services\SlugService;
 use Illuminate\Support\Facades\Gate;
 
 class PostsController extends Controller
@@ -52,24 +51,14 @@ class PostsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  StorePostRequest  $request
      * @param  int  $category
      * @return \Illuminate\Http\Response
+     * @info Observer included!
      */
     public function store(StorePostRequest $request, $category = null)
     {
-        // $newImageName = SlugService::createSlug(Post::class, 'slug', $request->title) . '-' . uniqid() . '.' . $request->image->extension();
-        // $request->image->move(public_path('images'), $newImageName);
-
-        $post = new Post;
-        $post->user_id = auth()->user()->id;
-        $post->title = $request->input('title');
-        $post->description = $request->input('description');
-        $post->slug = SlugService::createSlug(Post::class, 'slug', $request->title);
-        // $post->image_path = $newImageName;
-        $post->category_id = $request->category; // take category from request, or if not exist take from route
-
-        $post->save();
+        Post::create($request->validated());
 
         return redirect()->route('posts.index')
             ->with('message', ['success', 'Your post has been added!']);
@@ -83,8 +72,19 @@ class PostsController extends Controller
      */
     public function show($post_slug)
     {
-        return view('posts.show')
-            ->with('post', Post::where('slug', $post_slug)->with(['comments.user'])->firstOrFail());
+        $post = Post::where('slug', $post_slug)->with([
+            'authorInfo' => function ($query) {
+                return $query->withCount('posts', 'comments');
+            }
+        ])->firstOrFail();
+
+        $comments = $post->comments()->with([
+            'authorInfo' => function ($query) {
+                return $query->withCount('posts', 'comments');
+            }
+        ])->paginate(config('blog.pagination_items'));
+
+        return view('posts.show', compact('post', 'comments'));
     }
 
     /**
@@ -105,16 +105,14 @@ class PostsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  UpdatePostRequest  $request
      * @param  object  $post
      * @return \Illuminate\Http\Response
+     * @info Observer included!
      */
     public function update(UpdatePostRequest $request, Post $post)
     {
-        $post->update([
-            'title' => $request->input('title'),
-            'description' => $request->input('description')
-        ]);
+        $post->update($request->validated());
 
         return redirect()->route('posts.show', $post->slug)
             ->with('message', ['success', 'Your post has been updated!']);

@@ -16,15 +16,18 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 26);
+            $table->string('name_slug', 33)->unique();
+            $table->string('name', 30)->unique();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->enum('role', UserRole::TYPES)->default(UserRole::USER);
-            $table->string('description')->nullable();  // user footer under own post
-            $table->timestamp('last_action_time')->useCurrent(); // for exhausted to actions
+            $table->string('footer', 400)->nullable();
+            $table->timestamp('last_action_time')->nullable(); // for exhausted to actions
             $table->rememberToken();
             $table->timestamps();
+            $table->timestamp('banned_at')->nullable();
+            $table->softDeletes();
         });
     }
 

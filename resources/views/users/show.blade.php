@@ -6,7 +6,7 @@
         <div class="col-md-12">
             @include('layouts.messages_box')
             <div class="card">
-                <div class="card-header">{{ __('Blog') }}</div>
+                <div class="card-header">{{ __('Blog.h') }}</div>
                 <div class="card-body">
                     <table class="table table-hover">
                         <thead>
@@ -32,9 +32,9 @@
                                 <td>{{ $user->updated_at }}</td>
                                 <td>
                                     @can('update-user', $user)
-                                        <a href="{{ route('account.edit', $user->id) }}">
+                                        <a href="{{ route('account.edit') }}">
                                             <button class="btn btn-success btn-sm">E</button></a>
-                                        <form method="post" class="delete_form" action="{{ route('account.destroy', $user->id) }}">
+                                        <form method="post" class="delete_form" action="{{ route('account.destroy') }}">
                                             @csrf
                                             @method('delete')
                                             <button type="submit" class="btn btn-danger btn-sm delete" data-id="{{ $user->id }}">D</button>

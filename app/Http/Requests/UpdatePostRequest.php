@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
 class UpdatePostRequest extends FormRequest
 {
@@ -13,7 +14,7 @@ class UpdatePostRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->can('update-post', $this->route('post'));
+        return (auth()->check() && auth()->user()->can('update-post', $this->route('post')) && Gate::allows('user-exhausted'));
     }
 
     /**
@@ -24,8 +25,8 @@ class UpdatePostRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'required',
-            'description' => 'required'
+            'title' => 'required|max:80',
+            'text' => 'required|max:4000'
         ];
     }
 }

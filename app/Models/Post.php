@@ -14,8 +14,7 @@ class Post extends Model
     protected $fillable = [
         'slug',
         'title',
-        'description',
-        // 'image_path',
+        'text',
         'category_id'
     ];
     //protected $with = ['comments', 'user', 'category'];
@@ -23,7 +22,17 @@ class Post extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class)->select('id', 'name', 'role');
+        return $this->belongsTo(User::class)->select('id', 'name', 'name_slug', 'role');
+    }
+
+    public function authorInfo()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function userAllInfo()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     public function comments()
@@ -31,9 +40,14 @@ class Post extends Model
         return $this->hasMany(Comment::class);
     }
 
+    public function latestComment()
+    {
+        return $this->hasOne(Comment::class, 'post_id', 'id')->latest();
+    }
+
     public function category()
     {
-        return $this->belongsTo(PostsCategory::class, 'category_id', 'id')->select('id', 'name');
+        return $this->belongsTo(PostsCategory::class, 'category_id', 'id')->select('id', 'name', 'name_slug', 'description');
     }
 
     public function getRouteKeyName()

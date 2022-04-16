@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
 class StoreCommentRequest extends FormRequest
 {
@@ -13,7 +14,7 @@ class StoreCommentRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return (auth()->check() && Gate::allows('user-exhausted'));
     }
 
     /**
@@ -24,7 +25,7 @@ class StoreCommentRequest extends FormRequest
     public function rules()
     {
         return [
-            'description' => 'required',
+            'text' => 'required|max:4000',
             'post_id' => 'exists:posts,id'
         ];
     }
