@@ -119,7 +119,7 @@
                                         {{ $allSoftDeletedUsersCount }}
                                     </span>
                                     <div>
-                                        <small>{{ __('home.users.sum_not_verify') }}</small>
+                                        <small>{{ __('home.users.soft_deleted_sum') }}</small>
                                     </div>
                                 </div>
                                 <div class="col-md-1 forum-info">
@@ -127,7 +127,7 @@
                                         {{ $allBannedUsersCount }}
                                     </span>
                                     <div>
-                                        <small>{{ __('home.users.sum_not_verify') }}</small>
+                                        <small>{{ __('home.users.banned_sum') }}</small>
                                     </div>
                                 </div>
                                 <div class="col-md-1 forum-info">
@@ -135,7 +135,7 @@
                                         {{ $allActivedUsersCount }}
                                     </span>
                                     <div>
-                                        <small>{{ __('home.users.sum_not_verify') }}</small>
+                                        <small>{{ __('home.users.full_actived') }}</small>
                                     </div>
                                 </div>
                             </div>

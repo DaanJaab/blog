@@ -36,11 +36,15 @@
                                             <button class="btn btn-primary btn-sm">S</button></a>
                                             <a href="{{ route('posts.comments.edit', [$comment->post->slug, $comment->id]) }}">
                                                 <button class="btn btn-success btn-sm">E</button></a>
-                                            <form method="post" class="delete_form" action="{{ route('posts.comments.destroy', [$comment->post->slug, $comment->id]) }}">
-                                                @csrf
-                                                @method('delete')
-                                                <button type="submit" class="btn btn-danger btn-sm delete" data-id="{{ $comment->id }}">D</button>
-                                            </form>
+
+                                            <a href="{{ route('posts.comments.destroy', [$comment->post->slug, $comment->id]) }}"
+                                                onclick="event.preventDefault();
+                                                document.getElementById('delete-comment').submit();">
+                                                D</a>
+                                                <form id="delete-comment" method="post" class="delete_form" action="{{ route('posts.comments.destroy', [$comment->post->slug, $comment->id]) }}">
+                                                    @csrf
+                                                    @method('delete')
+                                                </form>
                                         @endcan
                                     </td>
                                 </tr>

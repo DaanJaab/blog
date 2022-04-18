@@ -26,11 +26,11 @@ class HomeController extends Controller
             'allVerifyUsersCount' => User::where('email_verified_at', '!=', null)->count(),
             'allNotVerifyUsersCount' => User::where('email_verified_at', null)->count(),
             'allSoftDeletedUsersCount' => User::where('deleted_at', '!=', null)->count(),
-            'allBannedUsersCount' => User::where('banned_at', '!=', null)->count(),
+            'allBannedUsersCount' => User::where('banned_to', '!=', null)->count(),
 
             'allActivedUsersCount' => User::where('email_verified_at', '!=', null)
                 ->where('deleted_at', null)
-                ->where('banned_at', null)
+                ->where('banned_to', null)
                 ->count(),
         ]);
     }

@@ -11,21 +11,22 @@
 */
 
 return [
-    'page_edit_title' => 'Edycja komentarza',
+    'editing' => 'Edycja komentarza',
+    'editing_desc' => 'Zmień coś w swoim komentarzu ;)',
     'content' => 'Treść',
+
     'buttons' => [
         'save' => 'Zapisz',
     ],
 
-    //CommentsController
     'messages' => [
+        //CommentsController
         'has_been_added' => 'Twój komentarz został dodany!',
         'has_been_updated' => 'Twój komentarz został zaktualizowany!',
         'has_been_deleted' => 'Twój komentarz został usunięty!',
-    ],
-    'errors' => [
-        'not_own_edit' => 'nie możesz edytować czyjegoś komentarza!',
-        'not_own_delete' => 'nie możesz usunąć czyjegoś komentarza!',
-        'not_belongs_to_this_post' => 'ten komentarz nie należy do tego posta!',
+
+        //middleware/IsCommentOwner
+        'is_not_own' => 'Ten komentarz nie należy do Ciebie!',
+        'not_belongs_to_this_post' => 'ten komentarz nie należy do tego posta!'
     ],
 ];

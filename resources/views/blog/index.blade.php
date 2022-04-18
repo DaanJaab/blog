@@ -88,7 +88,7 @@
                                                 @endphp
                                                 <a href="{{ route('users.show', $category->posts->last()->user->name_slug) }}">
                                                     @if ($category->posts->last()->user->role === \App\Enums\UserRole::ADMIN)
-                                                        <span class="text-danger">{{ $user_name }}</span>
+                                                        <span class="is-admin or-not">{{ $user_name }}</span>
                                                     @else
                                                        {{ $user_name }}
                                                     @endif

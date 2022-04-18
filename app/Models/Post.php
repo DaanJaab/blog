@@ -19,7 +19,6 @@ class Post extends Model
     ];
     //protected $with = ['comments', 'user', 'category'];
 
-
     public function user()
     {
         return $this->belongsTo(User::class)->select('id', 'name', 'name_slug', 'role');

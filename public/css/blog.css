@@ -225,9 +225,16 @@ body{margin-top:20px;
         border-color: #c5c9cb;
         margin-bottom: 20px;
     }
-    .comments:last-child {
-        border-bottom: 0px;
+    .comments:last-of-type {
+        margin-bottom: 0px;
     }
     .pagination {
         margin-bottom: 10px;
+    }
+    .is-admin {
+        border-color: #dc3545 !important;
+    }
+    .is-admin.or-not {
+        --bs-text-opacity: 1;
+        color: rgba(var(--bs-danger-rgb), var(--bs-text-opacity)) !important;
     }

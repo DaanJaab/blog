@@ -19,6 +19,7 @@ class PostsCategory extends Model
      */
     protected $fillable = [
         'name',
+        'name_slug',
         'description'
     ];
 

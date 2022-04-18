@@ -6,14 +6,15 @@ use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Models\Post;
 use App\Models\PostsCategory;
-use Illuminate\Support\Facades\Gate;
 
 class PostsController extends Controller
 {
 
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['index', 'show']]);
+        $this->middleware('isAdmin', ['only' => 'index']);
+        $this->middleware(['auth', 'isBanned'], ['except' => ['index', 'show']]);
+        $this->middleware('isPostOwner', ['only' => ['edit', 'update', 'destroy']]);
     }
     /**
      * Display a listing of the resource.
@@ -23,7 +24,7 @@ class PostsController extends Controller
     public function index()
     {
         return view('posts.index')
-            ->with('posts', Post::latest()->with(['user', 'category'])->paginate());
+            ->with('posts', Post::latest()->with(['user', 'category'])->paginate(config('blog.pagination_posts')));
     }
 
     /**
@@ -45,23 +46,23 @@ class PostsController extends Controller
      */
     public function createWithSpecificCategory(PostsCategory $category)
     {
-        return view('posts.createWithSpecificCategory', compact('category'));
+        return view('posts.create', compact('category'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param  StorePostRequest  $request
-     * @param  int  $category
+     * @param  int|null  $category
      * @return \Illuminate\Http\Response
-     * @info Observer included!
+     * @info --- Observer included! ---
      */
     public function store(StorePostRequest $request, $category = null)
     {
-        Post::create($request->validated());
+        $post = Post::create($request->validated());
 
-        return redirect()->route('posts.index')
-            ->with('message', ['success', 'Your post has been added!']);
+        return redirect()->route('posts.show', $post->slug)
+            ->with('message', ['success', __('posts.messages.has_been_added')]);
     }
 
     /**
@@ -82,7 +83,7 @@ class PostsController extends Controller
             'authorInfo' => function ($query) {
                 return $query->withCount('posts', 'comments');
             }
-        ])->paginate(config('blog.pagination_items'));
+        ])->paginate(config('blog.pagination_comments'));
 
         return view('posts.show', compact('post', 'comments'));
     }
@@ -95,9 +96,6 @@ class PostsController extends Controller
      */
     public function edit(Post $post)
     {
-        if (!Gate::allows('update-post', $post)) {
-            abort(403, 'nie możesz edytować czyjegoś posta!');
-        }
         return view('posts.edit')
             ->with('post', $post);
     }
@@ -108,14 +106,14 @@ class PostsController extends Controller
      * @param  UpdatePostRequest  $request
      * @param  object  $post
      * @return \Illuminate\Http\Response
-     * @info Observer included!
+     * @info --- Observer included! ---
      */
     public function update(UpdatePostRequest $request, Post $post)
     {
         $post->update($request->validated());
 
         return redirect()->route('posts.show', $post->slug)
-            ->with('message', ['success', 'Your post has been updated!']);
+            ->with('message', ['success', __('posts.messages.has_been_updated')]);
     }
 
     /**
@@ -126,12 +124,9 @@ class PostsController extends Controller
      */
     public function destroy(Post $post)
     {
-        if (!Gate::allows('update-post', $post)) {
-            abort(403, 'nie możesz usunąć czyjegoś posta!');
-        }
         $post->delete();
 
-        return redirect()->route('posts.index')
-            ->with('message', ['danger', 'Your post has been deleted!']);
+        return redirect()->route('blog.index')
+            ->with('message', ['danger', __('posts.messages.has_been_deleted')]);
     }
 }

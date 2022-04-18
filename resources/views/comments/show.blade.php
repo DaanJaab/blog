@@ -6,7 +6,7 @@
         <div class="col-md-12">
             @include('layouts.messages_box')
             <div class="card">
-                <div class="card-header">{{ __('Blog') }}</div>
+                <div class="card-header">{{ __('Blog.a') }}</div>
                 <div class="card-body">
                     <table class="table table-hover">
                         <thead>

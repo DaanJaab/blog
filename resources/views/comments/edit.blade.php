@@ -2,34 +2,58 @@
 
 @section('content')
 <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-12">
+    <div class="row">
+        <div class="col-lg-12">
             @include('layouts.messages_box')
-            <div class="card">
-                <div class="card-header">{{ __('comments.page_edit_title') }}</div>
-                    <form method="POST" action="{{ route('posts.comments.update', [$post->slug, $comment->id]) }}">
-                        {{ method_field('PUT') }}
-                        @csrf
-                        <div class="row mb-3">
-                            <label for="description" class="col-md-4 col-form-label text-md-end">{{ __('comments.content') }}</label>
-                            <div class="col-md-6">
-                                <textarea id="description" maxlength="1500" class="form-control @error('description') is-invalid @enderror" name="description" required>@if (old('description') !== null){{ old('description') }}@else{{ $comment->description }}@endif</textarea>
+            <div class="wrapper wrapper-content animated fadeInRight">
 
-                                @error('description')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
+                <div class="ibox-content m-b-sm border-bottom">
+                    <div class="p-xs">
+                        <div class="pull-left m-r-md">
+                            <i class="fa fa-globe text-navy mid-icon"></i>
                         </div>
-                        <div class="row mb-0">
-                            <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('comments.buttons.save') }}
-                                </button>
+                        @php
+                            if (strlen($comment->post->title) >= 30) {
+                                $post_title = substr($comment->post->title, 0, 30) . '...';
+                            } else {
+                                $post_title = $comment->post->title;
+                            }
+                        @endphp
+                        <h2><a href="{{ route('blog.index') }}">{{ __('global.blog_page') }}</a> -&rsaquo; <a href="{{ route('blog.show', $comment->post->category->name_slug) }}">{{ $comment->post->category->name }}</a> -&rsaquo;  <a href="{{ route('blog.show', $comment->post->slug) }}">{{ $post_title }}</a> -&rsaquo; {{ __('comments.editing') }}</h2>
+                        <span>{{ __('comments.editing_desc') }}</span>
+
+                    </div>
+                </div>
+
+                <div class="ibox-content forum-container">
+                    <div class="forum-item active">
+                        <form method="POST" action="{{ route('posts.comments.update', [$post->slug, $comment->id]) }}">
+                            {{ method_field('PUT') }}
+                            @csrf
+
+                            <div class="row mb-3">
+                                <label for="text" class="col-md-4 col-form-label text-md-end">{{ __('comments.content') }}</label>
+
+                                <div class="col-md-6">
+                                    <textarea id="text" type="text" maxlength="4000" class="form-control @error('text') is-invalid @enderror" name="text" required>@if(old('text') !== null){{ old('text') }}@else{{ $comment->text }}@endif</textarea>
+
+                                    @error('text')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
                             </div>
-                        </div>
-                    </form>
+
+                            <div class="row mb-0">
+                                <div class="col-md-6 offset-md-4">
+                                    <button type="submit" class="btn btn-primary">
+                                        {{ __('comments.buttons.save') }}
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

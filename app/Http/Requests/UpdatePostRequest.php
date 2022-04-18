@@ -14,7 +14,7 @@ class UpdatePostRequest extends FormRequest
      */
     public function authorize()
     {
-        return (auth()->check() && auth()->user()->can('update-post', $this->route('post')) && Gate::allows('user-exhausted'));
+        return (auth()->check() && Gate::allows('user-exhausted'));
     }
 
     /**

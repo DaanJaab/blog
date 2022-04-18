@@ -3,6 +3,7 @@
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\BlogsController;
 use App\Http\Controllers\CommentsController;
+use App\Http\Controllers\OwnAccountsController;
 use App\Http\Controllers\PostsController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -22,13 +23,15 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::controller(UsersController::class)->group(function () {
+Route::controller(OwnAccountsController::class)->group(function () {
     Route::get('/account', 'index')->name('account.index');
     Route::get('/account/edit', 'edit')->name('account.edit');
     Route::put('/account', 'update')->name('account.update');
     Route::delete('/account', 'destroy')->name('account.destroy');
+});
 
-    Route::get('/users', 'showUsers')->name('users.index');
+Route::controller(UsersController::class)->group(function () {
+    Route::get('/users', 'index')->name('users.index');
     Route::get('/users/{user}', 'show')->name('users.show');
     Route::get('/users/{user}/posts', 'showUserPosts')->name('users.posts.index');
     Route::get('/users/{user}/comments', 'showUserComments')->name('users.comments.index');

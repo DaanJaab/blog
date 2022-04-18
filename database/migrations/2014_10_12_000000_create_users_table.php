@@ -26,7 +26,7 @@ return new class extends Migration
             $table->timestamp('last_action_time')->nullable(); // for exhausted to actions
             $table->rememberToken();
             $table->timestamps();
-            $table->timestamp('banned_at')->nullable();
+            $table->timestamp('banned_to')->nullable();
             $table->softDeletes();
         });
     }

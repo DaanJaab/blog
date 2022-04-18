@@ -20,6 +20,7 @@ class CommentFactory extends Factory
     {
         return [
             'text' => $this->faker->realText(4000),
+            'created_at' => $this->faker->dateTimeBetween('-60 days'),
             'user_id' => User::inRandomOrder()->first()->id,
             'post_id' => Post::inRandomOrder()->first()->id,
         ];

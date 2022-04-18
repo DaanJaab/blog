@@ -2,12 +2,11 @@
 
 namespace App\Http\Middleware;
 
-use App\Enums\UserRole;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class IsAdmin
+class IsPostOwner
 {
     /**
      * Handle an incoming request.
@@ -18,10 +17,9 @@ class IsAdmin
      */
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::user() && Auth::user()->role == UserRole::ADMIN) {
+        if (Auth::user() && Auth::user()->id === $request->post->user_id) {
             return $next($request);
         }
-
-        return redirect()->route('blog.index')->with('message', ['danger', __('global.messages.is_not_admin')]);
+        return redirect()->route('blog.index')->with('message', ['danger', __('posts.messages.is_not_own')]);
     }
 }

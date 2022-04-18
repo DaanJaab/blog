@@ -24,6 +24,9 @@ return [
         'sum' => 'użytkowników łącznie',
         'sum_verify' => 'zweryfikowanych',
         'sum_not_verify' => 'niezwerifikowanych',
-        'admins_sum' => 'adminów'
+        'admins_sum' => 'adminów',
+        'soft_deleted_sum' => 'wstępnie usuniętych',
+        'banned_sum' => 'zbanowanych',
+        'full_actived' => 'w pełni funkcjonalnych'
     ],
 ];

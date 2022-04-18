@@ -47,12 +47,9 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('update-comment', function (User $user, Comment $comment) {
             return ($user->id === $comment->user_id);
         });
-        Gate::define('isAdmin', function (User $user) {
+        /*Gate::define('is-admin', function (User $user) {
             return ($user->id === UserRole::ADMIN);
-        });
-        Gate::define('isModer', function (User $user) {
-            return ($user->id === UserRole::MODER);
-        });
+        });*/
         Gate::before(function (User $user) { // dopuszcza admina we wszystkich autoryzacjach!
             if ($user->role === UserRole::ADMIN) {
                 return true;

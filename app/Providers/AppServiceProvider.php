@@ -29,7 +29,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Paginator::useBootstrapFive();
-        //Post::observe(PostsObserver::class);
-        //Comment::observe(CommentsObserver::class);
+        Post::observe(PostsObserver::class);
+        Comment::observe(CommentsObserver::class);
     }
 }

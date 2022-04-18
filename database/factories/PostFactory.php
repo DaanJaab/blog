@@ -24,6 +24,7 @@ class PostFactory extends Factory
             'title' => $post,
             'slug' => Str::slug($post),
             'text' => $this->faker->realText(4000),
+            'created_at' => $this->faker->dateTimeBetween('-60 days'),
             'user_id' => User::inRandomOrder()->first()->id,
             'category_id' => PostsCategory::inRandomOrder()->first()->id,
         ];

@@ -13,13 +13,13 @@
                             <i class="fa fa-globe text-navy mid-icon"></i>
                         </div>
                         <div class="pull-right m-r-md">
-                            <a href="{{ route('blog.posts.create', $category->name) }}">
+                            <a href="{{ route('blog.posts.create', $category->name_slug) }}">
                                 <button class="btn btn-primary">
                                     {{ __('blog.buttons.add_post_in_this_category') }}
                                 </button>
                             </a>
                         </div>
-                        <h2>{{ $category->name }}</h2>
+                        <h2><a href="{{ route('blog.index') }}">{{ __('global.blog_page') }}</a> -&rsaquo; {{ $category->name }}</h2>
                         <span>{{ $category->description }}</span>
 
                     </div>
@@ -38,7 +38,7 @@
                                     <div class="forum-sub-title">{{ __('blog.posts.by') }}
                                         <a href="{{ route('users.show', $post->user->name_slug) }}">
                                             @if ($post->user->role === \App\Enums\UserRole::ADMIN)
-                                                <span class="text-danger">{{ $post->user->name }}</span>
+                                                <span class="is-admin or-not">{{ $post->user->name }}</span>
                                             @else
                                                {{ $post->user->name }}
                                             @endif
@@ -65,11 +65,11 @@
                                                 }
                                             @endphp
                                             <a href="{{ route('users.show', $post->latestComment->user->name_slug) }}">
-                                            @if ($post->latestComment->user->role === \App\Enums\UserRole::ADMIN)
-                                                <span class="text-danger">{{ $user_name }}</span>
-                                            @else
-                                               {{ $user_name }}
-                                            @endif
+                                                @if ($post->latestComment->user->role === \App\Enums\UserRole::ADMIN)
+                                                    <span class="is-admin or-not">{{ $user_name }}</span>
+                                                @else
+                                                    {{ $user_name }}
+                                                @endif
                                             </a>
                                         @else
                                             --

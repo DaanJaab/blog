@@ -45,7 +45,7 @@
                         </tbody>
                     </table>
                     <div class="info-body">
-                        Liczba napisanych postów: <a href="{{ route('users.posts.index', $user->id) }}">{{ $postsSum }}</a> | Liczba napisanych komentarzy: <a href="{{ route('users.comments.index', $user->id) }}">{{ $commentsSum }}</a>
+                        Liczba napisanych postów: <a href="{{ route('users.posts.index', $user->name_slug) }}">{{ $postsSum }}</a> | Liczba napisanych komentarzy: <a href="{{ route('users.comments.index', $user->name_slug) }}">{{ $commentsSum }}</a>
                     </div>
                 </div>
             </div>

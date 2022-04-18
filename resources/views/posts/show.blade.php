@@ -12,13 +12,15 @@
                         <div class="pull-left m-r-md">
                             <i class="fa fa-globe text-navy mid-icon"></i>
                         </div>
-                        <h2><a href="{{ route('blog.show', $post->category->name) }}">{{ $post->category->name }}</a></h2>
+                        <h2><a href="{{ route('blog.index') }}">{{ __('global.blog_page') }}</a> -&rsaquo; <a href="{{ route('blog.show', $post->category->name_slug) }}">{{ $post->category->name }}</a> -&rsaquo; {{ __('posts.post') }}</h2>
                         <span>{{ $post->category->description }}</span>
 
                     </div>
                 </div>
-
-                <div class="ibox-content forum-container post">
+                @php
+                    if($post->authorInfo->role === \App\Enums\UserRole::ADMIN) { $admin_color = 'is-admin'; } else { $admin_color = ''; }
+                @endphp
+                <div class="ibox-content forum-container post {{ $admin_color }}">
                     <div class="forum-item active">
                         <div class="row">
                             <div class="col-md-2">
@@ -27,11 +29,7 @@
                                         <i class="fa fa-shield"></i>
                                     </div>
                                     <a href="{{ route('users.show', $post->authorInfo->name_slug) }}" class="forum-item-title">
-                                        @if ($post->authorInfo->role === \App\Enums\UserRole::ADMIN)
-                                            <span class="text-danger">{{ $post->authorInfo->name }}</span>
-                                        @else
-                                            {{ $post->authorInfo->name }}
-                                        @endif
+                                            <span class="{{ $admin_color }} or-not">{{ $post->authorInfo->name }}</span>
                                     </a>
                                     <small>{{ __('posts.user.created_at') }}</small>
                                     <div>{{ $post->authorInfo->created_at->format('d-m-Y') }}</div>
@@ -59,17 +57,23 @@
                                 </div>
                                 <div class="col-md-12 user-desc">
                                     <div class="float-start">
-                                        <small>{{ __('posts.buttons.report') }}</small>
+                                        @if($post->created_at < $post->updated_at)
+                                            <small>{{ __('posts.comments.updated_at') . $post->updated_at->format('H:i, d-m-Y') }}</small>
+                                        @endif
                                     </div>
                                     <div class="float-end">
+                                        <small>{{ __('posts.buttons.report') }}</small>
                                         <small>
                                             @can('update-post', $post)
                                                 <a href="{{ route('posts.edit', $post->slug) }}">
                                                     {{ __('posts.buttons.edit') }}</a>
-                                                <form method="post" class="delete_form" action="{{ route('posts.destroy', $post->slug) }}">
+                                                <a href="{{ route('posts.destroy', $post->slug) }}"
+                                                    onclick="event.preventDefault();
+                                                    document.getElementById('delete-post').submit();">
+                                                    {{ __('posts.buttons.delete') }}</a>
+                                                <form id="delete-post" method="post" class="delete_form" action="{{ route('posts.destroy', $post->slug) }}">
                                                     @csrf
                                                     @method('delete')
-                                                    <button type="submit" class="btn btn-danger btn-sm delete" data-id="{{ $post->slug }}">{{ __('posts.buttons.delete') }}</button>
                                                 </form>
                                             @endcan
                                         </small>
@@ -88,7 +92,10 @@
 
                 <a class="pagination">{{ $comments->onEachSide(1)->links() }}</a>
                 @forelse($comments as $comment)
-                    <div class="ibox-content forum-container comments">
+                    @php
+                        if($comment->authorInfo->role === \App\Enums\UserRole::ADMIN) { $admin_color = 'is-admin'; } else { $admin_color = ''; }
+                    @endphp
+                    <div class="ibox-content forum-container comments {{ $admin_color }}">
                         <div class="forum-item active">
                             <div class="row">
                                 <div class="col-md-2">
@@ -97,11 +104,7 @@
                                             <i class="fa fa-shield"></i>
                                         </div>
                                         <a href="{{ route('users.show', $comment->authorInfo->name_slug) }}" class="forum-item-title">
-                                            @if ($comment->authorInfo->role === \App\Enums\UserRole::ADMIN)
-                                                <span class="text-danger">{{ $comment->authorInfo->name }}</span>
-                                            @else
-                                                {{ $comment->authorInfo->name }}
-                                            @endif
+                                            <span class="{{ $admin_color }} or-not">{{ $comment->authorInfo->name }}</span>
                                         </a>
                                         <small>{{ __('posts.user.created_at') }}</small>
                                         <div>{{ $comment->authorInfo->created_at->format('d-m-Y') }}</div>
@@ -124,17 +127,23 @@
                                     </div>
                                     <div class="col-md-12 user-desc">
                                         <div class="float-start">
-                                            <small>{{ __('posts.buttons.report') }}</small>
+                                            @if($comment->created_at < $comment->updated_at)
+                                                <small>{{ __('posts.comments.updated_at') . $comment->updated_at->format('H:i, d-m-Y') }}</small>
+                                            @endif
                                         </div>
                                         <div class="float-end">
+                                            <small>{{ __('posts.buttons.report') }}</small>
                                             <small>
                                                 @can('update-comment', $comment)
                                                     <a href="{{ route('posts.comments.edit', [$post->slug, $comment->id]) }}">
                                                         {{ __('posts.buttons.edit') }}</a>
-                                                    <form method="post" class="delete_form" action="{{ route('posts.comments.destroy', [$post->slug, $comment->id]) }}">
+                                                    <a href="{{ route('posts.comments.destroy', [$post->slug, $comment->id]) }}"
+                                                        onclick="event.preventDefault();
+                                                        document.getElementById('delete-comment').submit();">
+                                                        {{ __('posts.buttons.delete') }}</a>
+                                                    <form id="delete-comment" method="post" class="delete_form" action="{{ route('posts.comments.destroy', [$post->slug, $comment->id]) }}">
                                                         @csrf
                                                         @method('delete')
-                                                        <button type="submit" class="btn btn-danger btn-sm delete" data-id="{{ $comment->id }}">{{ __('posts.buttons.delete') }}</button>
                                                     </form>
                                                 @endcan
                                             </small>
@@ -159,33 +168,33 @@
 
                 <div class="ibox-content forum-container add-comment">
                     @auth
-                    <form method="POST" action="{{ route('posts.comments.store', $post->slug) }}">
-                        @csrf
-                        <div class="forum-item active">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="row mb-3">
-                                        <label for="text" class="col-md-4 col-form-label text-md-end">{{ __('posts.comments.add') }}</label>
-                                        <div class="col-md-6">
-                                            <textarea id="text" maxlength="1500" class="form-control @error('text') is-invalid @enderror" name="text">{{ old('text') }}</textarea>
-                                            @error('text')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
+                        <form method="POST" action="{{ route('posts.comments.store', $post->slug) }}">
+                            @csrf
+                            <div class="forum-item active">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="row mb-3">
+                                            <label for="text" class="col-md-4 col-form-label text-md-end">{{ __('posts.comments.add') }}</label>
+                                            <div class="col-md-6">
+                                                <textarea id="text" type="text" maxlength="4000" class="form-control @error('text') is-invalid @enderror" name="text">{{ old('text') }}</textarea>
+                                                @error('text')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="row mb-0">
-                                        <div class="col-md-6 offset-md-4">
-                                            <button type="submit" class="btn btn-primary">
-                                                {{ __('posts.buttons.add_comment') }}
-                                            </button>
+                                        <div class="row mb-0">
+                                            <div class="col-md-6 offset-md-4">
+                                                <button type="submit" class="btn btn-primary">
+                                                    {{ __('posts.buttons.add_comment') }}
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </form>
+                        </form>
                     @endauth
                     @guest
                         <div class="row mb-0">

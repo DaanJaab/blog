@@ -27,9 +27,10 @@ class UserFactory extends Factory
             'email_verified_at' => $this->faker->randomElement([null, $this->faker->dateTimeBetween('-60 days')]),
             'password' => Hash::make('12341234'),
             'remember_token' => null,
-            'role' => $this->faker->randomElement(UserRole::TYPES),
+            'role' => $this->faker->randomElement([UserRole::USER, UserRole::USER, UserRole::USER, UserRole::USER, UserRole::ADMIN]),
             'footer' => $this->faker->randomElement([null, $this->faker->realText(400)]),
-            'banned_at' => $this->faker->randomElement([null, null, $this->faker->dateTimeBetween('-60 days')]),
+            'created_at' => $this->faker->dateTimeBetween('-60 days'),
+            'banned_to' => $this->faker->randomElement([null, null, $this->faker->dateTimeBetween('+1 days', '+50 days')]),
             'deleted_at' => $this->faker->randomElement([null, null, null, $this->faker->dateTimeBetween('-60 days')])
         ];
     }

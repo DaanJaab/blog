@@ -1,7 +1,8 @@
 <?php
 
 return [
-    'exhausted_time' => 10, // exhausted actions time
-    'pagination_comments' => 5, // amount of comments in post
-    'pagination_posts' => 5, // amount of posts in category
+    'exhausted_time' => 10, // exhausted actions time (store/update/delete)
+    'pagination_comments' => 10, // amount of comments below post (posts.show.blade)
+    'pagination_posts' => 10, // amount of posts in category (blog.show.blade)
+    'pagination_users' => 20, // amount of users in list (users.index.blade)
 ];

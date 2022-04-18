@@ -6,15 +6,15 @@ use App\Http\Requests\StoreCommentRequest;
 use App\Http\Requests\UpdateCommentRequest;
 use App\Models\Comment;
 use App\Models\Post;
-use Illuminate\Support\Facades\Gate;
 
 class CommentsController extends Controller
 {
 
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['show']]);
-        //$this->middleware('isadmin', ['only' => ['index']]);
+        $this->middleware('isAdmin', ['only' => 'index']);
+        $this->middleware(['auth', 'isBanned'], ['except' => ['index', 'show']]);
+        $this->middleware('isCommentOwner', ['except' => ['index', 'store']]);
     }
 
     /**
@@ -26,7 +26,7 @@ class CommentsController extends Controller
     public function index(Post $post)
     {
         return view('comments.index')
-            ->with('comments', Comment::where('post_id', $post->id)->with(['user', 'post'])->paginate(config('blog.pagination_items')));
+            ->with('comments', Comment::where('post_id', $post->id)->with(['user', 'post'])->paginate(config('blog.pagination_comments')));
     }
 
     /**
@@ -35,7 +35,7 @@ class CommentsController extends Controller
      * @param  StoreCommentRequest  $request
      * @param  object  $post
      * @return \Illuminate\Http\Response
-     * @info Observer included!
+     * @info --- Observer included! ---
      */
     public function store(StoreCommentRequest $request, Post $post)
     {
@@ -54,9 +54,6 @@ class CommentsController extends Controller
      */
     public function show(Post $post, Comment $comment)
     {
-        if ($post->id != $comment->post_id) {
-            abort(403, __('comments.errors.not_belongs_to_this_post'));
-        }
         return view('comments.show', compact('post'))
             ->with('comment', $comment);
     }
@@ -70,12 +67,6 @@ class CommentsController extends Controller
      */
     public function edit(Post $post, Comment $comment)
     {
-        if (!Gate::allows('update-comment', $comment)) {
-            abort(403, __('comments.errors.not_own_edit'));
-        }
-        if ($post->id != $comment->post_id) {
-            abort(403, __('comments.errors.not_belongs_to_this_post'));
-        }
         return view('comments.edit', compact('post'))
             ->with('comment', $comment);
     }
@@ -87,7 +78,7 @@ class CommentsController extends Controller
      * @param  object  $post
      * @param  object  $comment
      * @return \Illuminate\Http\Response
-     * @info Observer included!
+     * @info --- Observer included! ---
      */
     public function update(UpdateCommentRequest $request, Post $post, Comment $comment)
     {
@@ -100,15 +91,12 @@ class CommentsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  string  $post_slug
+     * @param  object  $post
      * @param  object  $comment
      * @return \Illuminate\Http\Response
      */
-    public function destroy($post_slug, Comment $comment)
+    public function destroy(Post $post, Comment $comment)
     {
-        if (!Gate::allows('update-comment', $comment)) {
-            abort(403, __('comments.errors.not_own_delete'));
-        }
         $comment->delete();
 
         return redirect()->back()
