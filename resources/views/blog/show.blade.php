@@ -26,8 +26,11 @@
                 </div>
 
                 <a class="pagination">{{ $posts->onEachSide(1)->links() }}</a>
-                <div class="ibox-content forum-container">
-                    @forelse ($posts as $post)
+                @forelse ($posts as $post)
+                    @php
+                        if($post->user->role === \App\Enums\UserRole::ADMIN) { $admin_color = 'is-admin'; } else { $admin_color = ''; }
+                    @endphp
+                    <div class="ibox-content forum-container posts {{ $admin_color }}">
                         <div class="forum-item active">
                             <div class="row">
                                 <div class="col-md-10">
@@ -37,11 +40,7 @@
                                     <a href="{{ route('posts.show', $post->slug) }}" class="forum-item-title">{{ $post->title }}</a>
                                     <div class="forum-sub-title">{{ __('blog.posts.by') }}
                                         <a href="{{ route('users.show', $post->user->name_slug) }}">
-                                            @if ($post->user->role === \App\Enums\UserRole::ADMIN)
-                                                <span class="is-admin or-not">{{ $post->user->name }}</span>
-                                            @else
-                                               {{ $post->user->name }}
-                                            @endif
+                                            <span class="{{ $admin_color }} or-not">{{ $post->user->name }}</span>
                                         </a>
                                         {{ __('blog.posts.create_date') . $post->created_at->format('d-m-Y') }}
                                     </div>
@@ -80,19 +79,19 @@
                                             @if (null !== $post->latestComment)
                                                 {{ $post->latestComment->created_at->format('d-m-Y') }}
                                             @else
-                                            {{ __('blog.comments.none') }}
+                                                {{ __('blog.comments.none') }}
                                             @endif
                                         </small>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    @empty
-                        <div class="row mb-0">
-                            <label for="description" class="col-form-label text-md-center">{{ __('blog.posts.none_in_category') }}</label>
-                        </div>
-                    @endforelse
-                </div>
+                    </div>
+                @empty
+                    <div class="row mb-0">
+                        <label for="description" class="col-form-label text-md-center">{{ __('blog.posts.none_in_category') }}</label>
+                    </div>
+                @endforelse
                 <a class="pagination">{{ $posts->onEachSide(1)->links() }}</a>
             </div>
         </div>

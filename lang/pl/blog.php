@@ -12,6 +12,7 @@
 
 return [
     'subjects' => 'Główne tematy',
+    'category' => 'Kategoria',
     'posts' => [
         'sum' => 'Łączna liczba postów: ',
         'quantity' => 'Postów',

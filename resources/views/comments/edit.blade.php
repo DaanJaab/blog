@@ -19,7 +19,7 @@
                                 $post_title = $comment->post->title;
                             }
                         @endphp
-                        <h2><a href="{{ route('blog.index') }}">{{ __('global.blog_page') }}</a> -&rsaquo; <a href="{{ route('blog.show', $comment->post->category->name_slug) }}">{{ $comment->post->category->name }}</a> -&rsaquo;  <a href="{{ route('blog.show', $comment->post->slug) }}">{{ $post_title }}</a> -&rsaquo; {{ __('comments.editing') }}</h2>
+                        <h2><a href="{{ route('blog.index') }}">{{ __('global.blog_page') }}</a> -&rsaquo; <a href="{{ route('blog.show', $comment->post->category->name_slug) }}">{{ $comment->post->category->name }}</a> -&rsaquo;  <a href="{{ route('posts.show', $comment->post->slug) }}">{{ $post_title }}</a> -&rsaquo; {{ __('comments.editing') }}</h2>
                         <span>{{ __('comments.editing_desc') }}</span>
 
                     </div>

@@ -14,7 +14,7 @@ class CommentsController extends Controller
     {
         $this->middleware('isAdmin', ['only' => 'index']);
         $this->middleware(['auth', 'isBanned'], ['except' => ['index', 'show']]);
-        $this->middleware('isCommentOwner', ['except' => ['index', 'store']]);
+        $this->middleware('isOwner:comment', ['only' => ['edit', 'update', 'destroy']]);
     }
 
     /**

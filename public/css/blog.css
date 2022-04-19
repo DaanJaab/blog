@@ -221,6 +221,10 @@ body{margin-top:20px;
     .post {
         background-color: #f4f4f4;
     }
+    .posts {
+        background-color: #f4f4f4;
+        margin-bottom: 20px;
+    }
     .comments {
         border-color: #c5c9cb;
         margin-bottom: 20px;

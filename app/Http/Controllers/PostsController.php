@@ -14,7 +14,7 @@ class PostsController extends Controller
     {
         $this->middleware('isAdmin', ['only' => 'index']);
         $this->middleware(['auth', 'isBanned'], ['except' => ['index', 'show']]);
-        $this->middleware('isPostOwner', ['only' => ['edit', 'update', 'destroy']]);
+        $this->middleware('isOwner:post', ['only' => ['edit', 'update', 'destroy']]);
     }
     /**
      * Display a listing of the resource.
@@ -24,7 +24,7 @@ class PostsController extends Controller
     public function index()
     {
         return view('posts.index')
-            ->with('posts', Post::latest()->with(['user', 'category'])->paginate(config('blog.pagination_posts')));
+            ->with('posts', Post::latest()->withCount('comments')->with(['user', 'category', 'latestComment.user'])->paginate(config('blog.pagination_posts')));
     }
 
     /**

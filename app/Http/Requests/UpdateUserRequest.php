@@ -14,7 +14,7 @@ class UpdateUserRequest extends FormRequest
      */
     public function authorize()
     {
-        return (auth()->check() && auth()->user()->can('update-user', auth()->user()) && Gate::allows('user-exhausted'));
+        return (auth()->user()->can('update-user', auth()->user()) && Gate::allows('user-exhausted'));
     }
 
     /**

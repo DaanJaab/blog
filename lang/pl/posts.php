@@ -22,6 +22,8 @@ return [
     'category' => 'Kategoria',
 
     'post' => 'Post',
+    'posts' => 'Posty',
+    'list_desc' => 'Lista ostatnio dodanych postów.',
     'user' => [
         'created_at' => 'Dołączył dnia:',
         'posts_count' => 'Postów: ',

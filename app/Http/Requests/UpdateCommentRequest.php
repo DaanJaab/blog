@@ -15,7 +15,7 @@ class UpdateCommentRequest extends FormRequest
      */
     public function authorize()
     {
-        return (auth()->check() && Gate::allows('user-exhausted'));
+        return (Gate::allows('user-exhausted'));
     }
 
     /**

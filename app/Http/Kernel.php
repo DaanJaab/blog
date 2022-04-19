@@ -66,7 +66,6 @@ class Kernel extends HttpKernel
         //custom
         'isAdmin' => \App\Http\Middleware\IsAdmin::class,
         'isBanned' => \App\Http\Middleware\IsBanned::class,
-        'isPostOwner' => \App\Http\Middleware\IsPostOwner::class,
-        'isCommentOwner' => \App\Http\Middleware\IsCommentOwner::class
+        'isOwner' => \App\Http\Middleware\IsOwner::class
     ];
 }

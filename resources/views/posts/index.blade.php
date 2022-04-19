@@ -2,61 +2,98 @@
 
 @section('content')
 <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-12">
+    <div class="row">
+        <div class="col-lg-12">
             @include('layouts.messages_box')
-            <div class="card">
-                <div class="card-header">{{ __('blog.page_index_title') }}
-                    <div class="col-md-1 offset-md-11">
-                        <a href="{{ route('posts.create') }}">
-                        <button class="btn btn-primary">
-                            {{ __('Dodaj posta') }}
-                        </button></a>
+            <div class="wrapper wrapper-content animated fadeInRight">
+
+                <div class="ibox-content m-b-sm border-bottom">
+                    <div class="p-xs">
+                        <div class="pull-left m-r-md">
+                            <i class="fa fa-globe text-navy mid-icon"></i>
+                        </div>
+                        <h2><a href="{{ route('blog.index') }}">{{ __('global.blog_page') }}</a> -&rsaquo; {{-- <a href="{{ route('blog.show', $post->category->name_slug) }}">{{ $post->category->name }}</a> -&rsaquo; --}} {{ __('posts.posts') }}</h2>
+                        <span>{{ __('posts.list_desc') }}</span>
+
                     </div>
                 </div>
-                <div class="card-body">
-                    <table class="table table-hover">
-                        <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Title</th>
-                            <th scope="col">Description</th>
-                            <th scope="col">Created_at</th>
-                            <th scope="col">Updated_at</th>
-                            <th scope="col">User name</th>
-                            <th scope="col">Category  name</th>
-                            <th scope="col">Akcje</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($posts as $post)
-                            <tr>
-                                <th scope="row">{{ $post->id }}</th>
-                                <td>{{ $post->title }}</td>
-                                <td>{{ $post->description }}</td>
-                                <td>{{ $post->created_at }}</td>
-                                <td>{{ $post->updated_at }}</td>
-                                <td>{{ $post->user->name }}</td>
-                                <td>{{ $post->category->name }}</td>
-                                <td>
-                                    <a href="{{ route('posts.show', $post->slug) }}">
-                                        <button class="btn btn-primary btn-sm">S</button></a>
-                                    @can('update-post', $post)
-                                        <a href="{{ route('posts.edit', $post->slug) }}">
-                                            <button class="btn btn-success btn-sm">E</button></a>
-                                        <form method="post" class="delete_form" action="{{ route('posts.destroy', $post->slug) }}">
-                                            @csrf
-                                            @method('delete')
-                                            <button type="submit" class="btn btn-danger btn-sm delete" data-id="{{ $post->slug }}">D</button>
-                                        </form>
-                                    @endcan
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                    {{ $posts->links() }}
-                </div>
+
+                <a class="pagination">{{ $posts->onEachSide(1)->links() }}</a>
+                @forelse ($posts as $post)
+                    @php
+                        if($post->user->role === \App\Enums\UserRole::ADMIN) { $admin_color = 'is-admin'; } else { $admin_color = ''; }
+                    @endphp
+                    <div class="ibox-content forum-container posts {{ $admin_color }}">
+                        <div class="forum-item active">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="forum-icon">
+                                        <i class="fa fa-shield"></i>
+                                    </div>
+                                    <a href="{{ route('posts.show', $post->slug) }}" class="forum-item-title">{{ $post->title }}</a>
+                                    <div class="forum-sub-title">{{ __('blog.posts.by') }}
+                                        <a href="{{ route('users.show', $post->user->name_slug) }}">
+                                            <span class="{{ $admin_color }} or-not">{{ $post->user->name }}</span>
+                                        </a>
+                                        {{ __('blog.posts.create_date') . $post->created_at->format('d-m-Y') }}
+                                    </div>
+                                </div>
+                                <div class="col-md-2 forum-info">
+                                    <span class="views-number">
+                                        <a href="{{ route('blog.show', $post->category->name_slug) }}">{{ $post->category->name }}</a>
+                                    </span>
+                                    <div>
+                                        <small>{{ __('blog.category') }}</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-1 forum-info">
+                                    <span class="views-number">
+                                        {{ $post->comments_count }}
+                                    </span>
+                                    <div>
+                                        <small>{{ __('blog.comments.quantity') }}</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-1 forum-info">
+                                    <span class="views-last">
+                                        @if (null !== $post->latestComment)
+                                            @php
+                                                if (strlen($post->latestComment->user->name) >= 12) {
+                                                    $user_name = substr($post->latestComment->user->name, 0, 12) . '...';
+                                                } else {
+                                                    $user_name = $post->latestComment->user->name;
+                                                }
+                                            @endphp
+                                            <a href="{{ route('users.show', $post->latestComment->user->name_slug) }}">
+                                                @if ($post->latestComment->user->role === \App\Enums\UserRole::ADMIN)
+                                                    <span class="is-admin or-not">{{ $user_name }}</span>
+                                                @else
+                                                    {{ $user_name }}
+                                                @endif
+                                            </a>
+                                        @else
+                                            --
+                                        @endif
+                                    </span>
+                                    <div>
+                                        <small>
+                                            @if (null !== $post->latestComment)
+                                                {{ $post->latestComment->created_at->format('d-m-Y') }}
+                                            @else
+                                                {{ __('blog.comments.none') }}
+                                            @endif
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @empty
+                    <div class="row mb-0">
+                        <label for="description" class="col-form-label text-md-center">{{ __('blog.posts.none_in_category') }}</label>
+                    </div>
+                @endforelse
+                <a class="pagination">{{ $posts->onEachSide(1)->links() }}</a>
             </div>
         </div>
     </div>
