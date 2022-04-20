@@ -6,6 +6,7 @@ use App\Http\Requests\StoreCommentRequest;
 use App\Http\Requests\UpdateCommentRequest;
 use App\Models\Comment;
 use App\Models\Post;
+use Illuminate\Support\Facades\Gate;
 
 class CommentsController extends Controller
 {
@@ -54,8 +55,7 @@ class CommentsController extends Controller
      */
     public function show(Post $post, Comment $comment)
     {
-        return view('comments.show', compact('post'))
-            ->with('comment', $comment);
+        return view('comments.show', compact('post', 'comment'));
     }
 
     /**
@@ -67,8 +67,7 @@ class CommentsController extends Controller
      */
     public function edit(Post $post, Comment $comment)
     {
-        return view('comments.edit', compact('post'))
-            ->with('comment', $comment);
+        return view('comments.edit', compact('post', 'comment'));
     }
 
     /**
@@ -97,6 +96,7 @@ class CommentsController extends Controller
      */
     public function destroy(Post $post, Comment $comment)
     {
+        Gate::allows('user-exhausted');
         $comment->delete();
 
         return redirect()->back()

@@ -6,6 +6,7 @@ use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Models\Post;
 use App\Models\PostsCategory;
+use Illuminate\Support\Facades\Gate;
 
 class PostsController extends Controller
 {
@@ -124,6 +125,7 @@ class PostsController extends Controller
      */
     public function destroy(Post $post)
     {
+        Gate::allows('user-exhausted');
         $post->delete();
 
         return redirect()->route('blog.index')

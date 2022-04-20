@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdateUserRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class OwnAccountsController extends Controller
 {
@@ -57,6 +58,7 @@ class OwnAccountsController extends Controller
      */
     public function destroy()
     {
+        Gate::allows('user-exhausted');
         auth()->user()->delete();
         Auth::logout();
 

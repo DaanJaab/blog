@@ -2,7 +2,6 @@
 
 namespace App\Observers;
 
-use App\Http\Requests\StorePostRequest;
 use App\Models\Post;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 
@@ -18,7 +17,7 @@ class PostsObserver
     {
         $post->user_id = auth()->user()->id;
         $post->slug = SlugService::createSlug(Post::class, 'slug', $post->title);
-        $post->category_id = request()->category; // take category from request, or if not exist take from route
+        $post->category_id = request()->category; // take category from request input, or if not exist take from route
     }
 
     /**
@@ -29,9 +28,7 @@ class PostsObserver
      */
     public function created(Post $post)
     {
-        $user = auth()->user();
-        $user->last_action_time = now()->toDateTimeString();
-        $user->save();
+        //
     }
 
     /**
@@ -41,6 +38,17 @@ class PostsObserver
      * @return void
      */
     public function updated(Post $post)
+    {
+        //
+    }
+
+    /**
+     * Handle the Post "saved (created&updated)" event.
+     *
+     * @param  \App\Models\Post  $post
+     * @return void
+     */
+    public function saved(Post $post)
     {
         $user = auth()->user();
         $user->last_action_time = now()->toDateTimeString();
@@ -55,7 +63,9 @@ class PostsObserver
      */
     public function deleted(Post $post)
     {
-        //
+        $user = auth()->user();
+        $user->last_action_time = now()->toDateTimeString();
+        $user->save();
     }
 
     /**

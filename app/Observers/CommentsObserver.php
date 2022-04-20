@@ -26,9 +26,7 @@ class CommentsObserver
      */
     public function created(Comment $comment)
     {
-        $user = auth()->user();
-        $user->last_action_time = now()->toDateTimeString();
-        $user->save();
+        //
     }
 
     /**
@@ -38,6 +36,17 @@ class CommentsObserver
      * @return void
      */
     public function updated(Comment $comment)
+    {
+        //
+    }
+
+    /**
+     * Handle the Comment "saved (created&updated)" event.
+     *
+     * @param  \App\Models\Comment  $comment
+     * @return void
+     */
+    public function saved(Comment $comment)
     {
         $user = auth()->user();
         $user->last_action_time = now()->toDateTimeString();
@@ -52,7 +61,9 @@ class CommentsObserver
      */
     public function deleted(Comment $comment)
     {
-        //
+        $user = auth()->user();
+        $user->last_action_time = now()->toDateTimeString();
+        $user->save();
     }
 
     /**
@@ -74,6 +85,8 @@ class CommentsObserver
      */
     public function forceDeleted(Comment $comment)
     {
-        //
+        $user = auth()->user();
+        $user->last_action_time = now()->toDateTimeString();
+        $user->save();
     }
 }

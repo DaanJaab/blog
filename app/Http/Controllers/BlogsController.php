@@ -17,7 +17,7 @@ class BlogsController extends Controller
     public function index()
     {
         return view('blog.index', [
-            'categories' => PostsCategory::withCount('posts', 'comments')->with('posts.user')->get(),
+            'categories' => PostsCategory::withCount('posts', 'comments')->with('latestPost.user')->get(),
             'allPostsCount' => Post::count(),
             'allCommentsCount' => Comment::count()
         ]);

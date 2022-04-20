@@ -27,6 +27,10 @@ class PostsCategory extends Model
     {
         return $this->hasMany(Post::class, 'category_id', 'id');
     }
+    public function latestPost()
+    {
+        return $this->hasOne(Post::class, 'category_id', 'id')->latest();
+    }
 
     public function comments()
     {

@@ -161,8 +161,7 @@ body{margin-top:20px;
       -moz-border-top-colors: none;
       background-color: #ffffff;
       border-color: #e7eaec;
-      -o-border-image: none;
-         border-image: none;
+      border-image: none;
       border-style: solid solid none;
       border-width: 3px 0 0;
       color: inherit;
@@ -243,4 +242,3 @@ body{margin-top:20px;
         --bs-text-opacity: 1;
         color: rgba(var(--bs-danger-rgb), var(--bs-text-opacity)) !important;
     }
-

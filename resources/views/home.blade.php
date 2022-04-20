@@ -6,7 +6,6 @@
         <div class="col-lg-12">
             @include('layouts.messages_box')
             <div class="wrapper wrapper-content animated fadeInRight">
-
                 <div class="ibox-content m-b-sm border-bottom">
                     <div class="p-xs">
                         <div class="pull-left m-r-md">
@@ -21,7 +20,6 @@
                         </div>
                         <h2>{{ __('global.app_name') }}</h2>
                         <span>{{ __('global.app_description') }}</span>
-
                     </div>
                 </div>
 
@@ -34,14 +32,12 @@
                         </div>
                         <h3>General subjects.....................................................</h3>
                     </div>
-
                         <div class="forum-item active">
                             <div class="row">
                                 <div class="col-md-9">
                                     <div class="forum-icon">
                                         <i class="fa fa-shield"></i>
                                     </div>
-
                                     <div class="forum-sub-title">QQQQQQQQQ222222222</div>
                                 </div>
                                 <div class="col-md-1 forum-info">
@@ -70,8 +66,6 @@
                                 </div>
                             </div>
                         </div>
-
-
 
                         <div class="forum-item active">
                             <div class="row">
@@ -140,8 +134,6 @@
                                 </div>
                             </div>
                         </div>
-
-
                 </div>
             </div>
         </div>

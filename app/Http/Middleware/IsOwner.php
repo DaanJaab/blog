@@ -25,7 +25,7 @@ class IsOwner
         $data = in_array($type, $types) ? $types[$type] : false;
         if ($data) {
             if ($data === 'comment' && $request->post->id != $request->comment->post_id) {
-                abort(403, __('comments.messages.not_belongs_to_this_post'));
+                abort(403, __('global.messages.not_belongs_to_this_post'));
             }
             if (Auth::user()->id != $request->$data->user_id) {
                 abort(403, __('global.messages.is_not_own'));

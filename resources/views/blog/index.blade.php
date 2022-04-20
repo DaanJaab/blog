@@ -6,7 +6,6 @@
         <div class="col-lg-12">
             @include('layouts.messages_box')
             <div class="wrapper wrapper-content animated fadeInRight">
-
                 <div class="ibox-content m-b-sm border-bottom">
                     <div class="p-xs">
                         <div class="pull-left m-r-md">
@@ -21,10 +20,8 @@
                         </div>
                         <h2>{{ __('global.app_name') }}</h2>
                         <span>{{ __('global.app_description') }}</span>
-
                     </div>
                 </div>
-
                 <div class="ibox-content forum-container">
                     <div class="forum-title">
                         <div class="pull-right forum-desc">
@@ -42,8 +39,12 @@
                                     <div class="forum-icon">
                                         <i class="fa fa-shield"></i>
                                     </div>
-                                    <a href="{{ route('blog.show', $category->name_slug) }}" class="forum-item-title">{{ $category->name }}</a>
-                                    <div class="forum-sub-title">{{ $category->description }}</div>
+                                    <a href="{{ route('blog.show', $category->name_slug) }}" class="forum-item-title">
+                                        {{ $category->name }}
+                                    </a>
+                                    <div class="forum-sub-title">
+                                        {{ $category->description }}
+                                    </div>
                                 </div>
                                 <div class="col-md-1 forum-info">
                                     <span class="views-number">
@@ -63,38 +64,24 @@
                                 </div>
                                 <div class="col-md-1 forum-info">
                                     <span class="views-last">
-                                        @if (null !== $category->posts->last())
-                                            @php
-                                                if (strlen($category->posts->last()->title) >= 10) {
-                                                    $title = substr($category->posts->last()->title, 0, 10) . '...';
-                                                } else {
-                                                    $title = $category->posts->last()->title;
-                                                }
-                                            @endphp
-                                        <a href="{{ route('posts.show', $category->posts->last()->slug) }}">{{ $title }}</a>
+                                        @if (null !== $category->latestPost)
+                                            <a href="{{ route('posts.show', $category->latestPost->slug) }}">
+                                                {{ \Illuminate\Support\Str::limit($category->latestPost->title, 12, '...') }}
+                                            </a>
                                         @else
                                             --
                                         @endif
                                     </span>
                                     <div>
                                         <small>
-                                            @if (null !== $category->posts->last())
-                                                @php
-                                                    if (strlen($category->posts->last()->user->name) >= 12) {
-                                                        $user_name = substr($category->posts->last()->user->name, 0, 12) . '...';
-                                                    } else {
-                                                        $user_name = $category->posts->last()->user->name;
-                                                    }
-                                                @endphp
-                                                <a href="{{ route('users.show', $category->posts->last()->user->name_slug) }}">
-                                                    @if ($category->posts->last()->user->role === \App\Enums\UserRole::ADMIN)
-                                                        <span class="is-admin or-not">{{ $user_name }}</span>
-                                                    @else
-                                                       {{ $user_name }}
-                                                    @endif
+                                            @if (null !== $category->latestPost)
+                                                <a href="{{ route('users.show', $category->latestPost->user->name_slug) }}">
+                                                    <span class="{{ ($category->latestPost->user->role === \App\Enums\UserRole::ADMIN) ? 'is-admin' : ''; }} if-admin-color">
+                                                        {{ \Illuminate\Support\Str::limit($category->latestPost->user->name, 12, '...') }}
+                                                    </span>
                                                 </a>
                                                 <br>
-                                                {{ $category->posts->last()->created_at->format('d-m-Y') }}
+                                                {{ $category->latestPost->created_at->format('d-m-Y') }}
                                             @else
                                                 {{ __('blog.posts.none_in_list') }}
                                             @endif

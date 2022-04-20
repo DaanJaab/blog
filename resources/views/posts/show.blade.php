@@ -6,7 +6,6 @@
         <div class="col-lg-12">
             @include('layouts.messages_box')
             <div class="wrapper wrapper-content animated fadeInRight">
-
                 <div class="ibox-content m-b-sm border-bottom">
                     <div class="p-xs">
                         <div class="pull-left m-r-md">
@@ -14,11 +13,10 @@
                         </div>
                         <h2><a href="{{ route('blog.index') }}">{{ __('global.blog_page') }}</a> -&rsaquo; <a href="{{ route('blog.show', $post->category->name_slug) }}">{{ $post->category->name }}</a> -&rsaquo; {{ __('posts.post') }}</h2>
                         <span>{{ $post->category->description }}</span>
-
                     </div>
                 </div>
                 @php
-                    if($post->authorInfo->role === \App\Enums\UserRole::ADMIN) { $admin_color = 'is-admin'; } else { $admin_color = ''; }
+                    $admin_color = ($post->authorInfo->role === \App\Enums\UserRole::ADMIN) ? 'is-admin' : '';
                 @endphp
                 <div class="ibox-content forum-container post {{ $admin_color }}">
                     <div class="forum-item active">
@@ -29,7 +27,7 @@
                                         <i class="fa fa-shield"></i>
                                     </div>
                                     <a href="{{ route('users.show', $post->authorInfo->name_slug) }}" class="forum-item-title">
-                                            <span class="{{ $admin_color }} or-not">{{ $post->authorInfo->name }}</span>
+                                            <span class="{{ $admin_color }} if-admin-color">{{ $post->authorInfo->name }}</span>
                                     </a>
                                     <small>{{ __('posts.user.created_at') }}</small>
                                     <div>{{ $post->authorInfo->created_at->format('d-m-Y') }}</div>
@@ -89,11 +87,10 @@
                     </div>
                 </div>
 
-
                 <a class="pagination">{{ $comments->onEachSide(1)->links() }}</a>
                 @forelse($comments as $comment)
                     @php
-                        if($comment->authorInfo->role === \App\Enums\UserRole::ADMIN) { $admin_color = 'is-admin'; } else { $admin_color = ''; }
+                        $admin_color = ($comment->authorInfo->role === \App\Enums\UserRole::ADMIN) ? 'is-admin' : '';
                     @endphp
                     <div class="ibox-content forum-container comments {{ $admin_color }}">
                         <div class="forum-item active">
@@ -104,7 +101,7 @@
                                             <i class="fa fa-shield"></i>
                                         </div>
                                         <a href="{{ route('users.show', $comment->authorInfo->name_slug) }}" class="forum-item-title">
-                                            <span class="{{ $admin_color }} or-not">{{ $comment->authorInfo->name }}</span>
+                                            <span class="{{ $admin_color }} if-admin-color">{{ $comment->authorInfo->name }}</span>
                                         </a>
                                         <small>{{ __('posts.user.created_at') }}</small>
                                         <div>{{ $comment->authorInfo->created_at->format('d-m-Y') }}</div>
@@ -139,9 +136,9 @@
                                                         {{ __('posts.buttons.edit') }}</a>
                                                     <a href="{{ route('posts.comments.destroy', [$post->slug, $comment->id]) }}"
                                                         onclick="event.preventDefault();
-                                                        document.getElementById('delete-comment').submit();">
+                                                        document.getElementById('delete-comment-{{ $comment->id }}').submit();">
                                                         {{ __('posts.buttons.delete') }}</a>
-                                                    <form id="delete-comment" method="post" class="delete_form" action="{{ route('posts.comments.destroy', [$post->slug, $comment->id]) }}">
+                                                    <form id="delete-comment-{{ $comment->id }}" method="post" class="delete_form" action="{{ route('posts.comments.destroy', [$post->slug, $comment->id]) }}">
                                                         @csrf
                                                         @method('delete')
                                                     </form>
@@ -164,7 +161,6 @@
                     </div>
                 @endforelse
                 <a class="pagination">{{ $comments->onEachSide(1)->links() }}</a>
-
 
                 <div class="ibox-content forum-container add-comment">
                     @auth

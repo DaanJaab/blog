@@ -6,7 +6,6 @@
         <div class="col-lg-12">
             @include('layouts.messages_box')
             <div class="wrapper wrapper-content animated fadeInRight">
-
                 <div class="ibox-content m-b-sm border-bottom">
                     <div class="p-xs">
                         <div class="pull-left m-r-md">
@@ -14,7 +13,6 @@
                         </div>
                         <h2><a href="{{ route('blog.index') }}">{{ __('global.blog_page') }}</a> -&rsaquo; @isset($category) <a href="{{ route('blog.show', $category->name_slug) }}">{{ $category->name }}</a> -&rsaquo; @endisset {{ __('posts.adding') }}</h2>
                         <span>{{ __('posts.adding_desc') }}</span>
-
                     </div>
                 </div>
 
@@ -28,10 +26,8 @@
                             @csrf
                             <div class="row mb-3">
                                 <label for="title" class="col-md-4 col-form-label text-md-end">{{ __('posts.title') }}</label>
-
                                 <div class="col-md-6">
                                     <input id="title" type="text" maxlength="80" class="form-control @error('title') is-invalid @enderror" name="title" value="{{ old('title') }}" required autocomplete="title" autofocus>
-
                                     @error('title')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -42,10 +38,8 @@
 
                             <div class="row mb-3">
                                 <label for="text" class="col-md-4 col-form-label text-md-end">{{ __('posts.content') }}</label>
-
                                 <div class="col-md-6">
                                     <textarea id="text" type="text" maxlength="4000" class="form-control @error('text') is-invalid @enderror" name="text" required>{{ old('text') }}</textarea>
-
                                     @error('text')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -55,10 +49,8 @@
                             </div>
 
                             @if(!isset($category))
-
                                 <div class="row mb-3">
                                     <label for="category" class="col-md-4 col-form-label text-md-end">{{ __('posts.category') }}</label>
-
                                     <div class="col-md-6">
                                         <select id="category" class="form-control @error('category') is-invalid @enderror" name="category" required>
                                             @foreach($categories as $category)
@@ -69,7 +61,6 @@
                                                 @endif
                                             @endforeach
                                         </select>
-
                                         @error('category')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>

@@ -6,7 +6,6 @@
 
 ## Informations
 
-Before use bd seeder first turn off Posts and Comments Observer in AppServiceProvider (use comment `//`).
 Project name moved to `lang/{lang}/global.php`.
 
 ## About my project (blog)

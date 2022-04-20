@@ -48,9 +48,6 @@ return [
         //PostsController
         'has_been_added' => 'Twój post został dodany!',
         'has_been_updated' => 'Twój post został zaktualizowany!',
-        'has_been_deleted' => 'Twój post został usunięty!',
-
-        //middleware/IsPostOwner
-        'is_not_own' => 'Ten post nie należy do Ciebie!'
+        'has_been_deleted' => 'Twój post został usunięty!'
     ]
 ];

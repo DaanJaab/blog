@@ -43,6 +43,9 @@ return [
         //middleware/IsAdmin
         'is_not_admin' => 'Nie jesteś administratorem!',
         //middleware/IsBanned
-        'is_banned' => 'Jesteś zbanowany, nie możesz tego zrobić!'
+        'is_banned' => 'Jesteś zbanowany, nie możesz tego zrobić!',
+        //middleware/IsOwner
+        'is_not_own' => 'Ta zawartość nie należy do Ciebie!',
+        'not_belongs_to_this_post' => 'ten komentarz nie należy do tego posta!'
     ]
 ];
