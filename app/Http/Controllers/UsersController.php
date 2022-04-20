@@ -17,22 +17,19 @@ class UsersController extends Controller
     public function index()
     {
         return view('users.index')
-            ->with('users', User::paginate(config('blog.pagination_users')));
+            ->with('users', User::withCount('posts', 'comments')->paginate(config('blog.pagination_users')));
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  object  $user
+     * @param  mixed  $name_slug
      * @return \Illuminate\Http\Response
      */
-    public function show(User $user)
+    public function show($name_slug)
     {
-        return view('users.show', [
-            'user' => $user,
-            'postsSum' => Post::where('user_id', $user->id)->count(),
-            'commentsSum' => Comment::where('user_id', $user->id)->count()
-        ]);
+        return view('users.show')
+            ->with('user', User::where('name_slug', $name_slug)->withCount('posts', 'comments')->firstOrFail());
     }
 
     /**
@@ -44,7 +41,7 @@ class UsersController extends Controller
     public function showUserPosts(User $user)
     {
         return view('posts.index')
-            ->with('posts', Post::where('user_id', $user->id)->latest()->with(['user', 'category'])->paginate(config('blog.pagination_posts')));
+            ->with('posts', Post::where('user_id', $user->id)->latest()->withCount('comments')->with(['user', 'category', 'latestComment.user'])->paginate(config('blog.pagination_posts')));
     }
 
     /**

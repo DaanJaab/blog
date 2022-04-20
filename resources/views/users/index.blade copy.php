@@ -6,7 +6,7 @@
         <div class="col-md-12">
             @include('layouts.messages_box')
             <div class="card">
-                <div class="card-header">{{ __('Blog.h') }}</div>
+                <div class="card-header">{{ __('users.') }}</div>
                 <div class="card-body">
                     <table class="table table-hover">
                         <thead>
@@ -22,6 +22,7 @@
                         </tr>
                         </thead>
                         <tbody>
+                            @foreach($users as $user)
                             <tr>
                                 <th scope="row">{{ $user->id }}</th>
                                 <td>{{ $user->name }}</td>
@@ -31,22 +32,13 @@
                                 <td>{{ $user->created_at }}</td>
                                 <td>{{ $user->updated_at }}</td>
                                 <td>
-                                    @can('update-user', $user)
-                                        <a href="{{ route('account.edit') }}">
-                                            <button class="btn btn-success btn-sm">E</button></a>
-                                        <form method="post" class="delete_form" action="{{ route('account.destroy') }}">
-                                            @csrf
-                                            @method('delete')
-                                            <button type="submit" class="btn btn-danger btn-sm delete" data-id="{{ $user->id }}">D</button>
-                                        </form>
-                                    @endcan
+                                    <a href="{{ route('users.show', $user->name) }}">
+                                        <button class="btn btn-primary btn-sm">S</button></a>
                                 </td>
                             </tr>
+                            @endforeach
                         </tbody>
                     </table>
-                    <div class="info-body">
-                        Liczba napisanych postów: <a href="{{ route('users.posts.index', $user->name_slug) }}">{{ $postsSum }}</a> | Liczba napisanych komentarzy: <a href="{{ route('users.comments.index', $user->name_slug) }}">{{ $commentsSum }}</a>
-                    </div>
                 </div>
             </div>
         </div>

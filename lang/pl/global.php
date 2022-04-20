@@ -40,12 +40,15 @@ return [
     ],
 
     'messages' => [
-        //middleware/IsAdmin
+        //middleware/
+        //CommentBelongsToPost
+        'not_belongs_to_this_post' => 'ten komentarz nie należy do tego posta!',
+        //IsAdmin
         'is_not_admin' => 'Nie jesteś administratorem!',
-        //middleware/IsBanned
+        //IsBanned
         'is_banned' => 'Jesteś zbanowany, nie możesz tego zrobić!',
-        //middleware/IsOwner
-        'is_not_own' => 'Ta zawartość nie należy do Ciebie!',
-        'not_belongs_to_this_post' => 'ten komentarz nie należy do tego posta!'
+        //IsOwner
+        'server_error' => 'Błąd systemu! Prosimy o kontakt z administratorem',
+        'is_not_own' => 'Ta zawartość nie należy do Ciebie!'
     ]
 ];

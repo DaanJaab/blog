@@ -21,20 +21,16 @@ return [
     'category' => 'Kategoria',
 
     'post' => 'Post',
-    'posts' => 'Posty',
-    'list_desc' => 'Lista postów.',
+    'posts' => 'Postów', //
+    'comments' => 'Komentarzy', //
+    'list_desc' => 'Przegląd konta użytkownika.', //
+    'created_at' => 'Dołączył dnia: ', //
     'user' => [
-        'created_at' => 'Dołączył dnia:',
+
         'posts_count' => 'Postów: ',
         'comments_count' => 'Komentarzy: ',
     ],
-    'comments' => [
-        'created_at' => 'Napisano: ',
-        'updated_at' => 'Edytowano: ',
-        'none' => 'Nie ma komentarzy do tego posta.',
-        'add' => 'Twój komentarz:',
-        'login_to_put' => 'Musisz być zalogowany, by dodać komentarz!'
-    ],
+
     'buttons' => [
         'add_post' => 'Dodaj posta',
         'add_comment' => 'Dodaj komentarz',
