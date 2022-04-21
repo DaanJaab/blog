@@ -39,7 +39,7 @@
                                     <div class="forum-icon">
                                         <i class="fa fa-shield"></i>
                                     </div>
-                                    <a href="{{ route('blog.show', $category->name_slug) }}" class="forum-item-title">
+                                    <a href="{{ route('blog.show', $category->slug) }}" class="forum-item-title">
                                         {{ $category->name }}
                                     </a>
                                     <div class="forum-sub-title">
@@ -75,7 +75,7 @@
                                     <div>
                                         <small>
                                             @if (null !== $category->latestPost)
-                                                <a href="{{ route('users.show', $category->latestPost->user->name_slug) }}">
+                                                <a href="{{ route('users.show', $category->latestPost->user->slug) }}">
                                                     <span class="{{ ($category->latestPost->user->role === \App\Enums\UserRole::ADMIN) ? 'is-admin' : ''; }} if-admin-color">
                                                         {{ \Illuminate\Support\Str::limit($category->latestPost->user->name, 12, '...') }}
                                                     </span>

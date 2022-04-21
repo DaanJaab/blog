@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">EDYCJA: {{ $user->name }}</div>
+                <div class="card-header">EDYCJAyyyyyyyyyy: {{ $user->name }}</div>
 
                     <form method="POST" action="{{ route('account.update') }}">
                         {{ method_field('PUT') }}

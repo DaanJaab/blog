@@ -25,7 +25,7 @@ class UpdateUserRequest extends FormRequest
     public function rules()
     {
         return [
-            'footer' => 'required|max:400'
+            'signature' => 'required|max:400'
         ];
     }
 }

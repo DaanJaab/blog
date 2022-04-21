@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('slug', 85)->unique();
             $table->string('title', 80);
-            $table->string('text', 4000);
+            $table->string('content', 4000);
             $table->timestamps();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

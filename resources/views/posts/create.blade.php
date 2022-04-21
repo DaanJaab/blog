@@ -11,7 +11,7 @@
                         <div class="pull-left m-r-md">
                             <i class="fa fa-globe text-navy mid-icon"></i>
                         </div>
-                        <h2><a href="{{ route('blog.index') }}">{{ __('global.blog_page') }}</a> -&rsaquo; @isset($category) <a href="{{ route('blog.show', $category->name_slug) }}">{{ $category->name }}</a> -&rsaquo; @endisset {{ __('posts.adding') }}</h2>
+                        <h2><a href="{{ route('blog.index') }}">{{ __('global.blog_page') }}</a> -&rsaquo; @isset($category) <a href="{{ route('blog.show', $category->slug) }}">{{ $category->name }}</a> -&rsaquo; @endisset {{ __('posts.adding') }}</h2>
                         <span>{{ __('posts.adding_desc') }}</span>
                     </div>
                 </div>
@@ -37,10 +37,10 @@
                             </div>
 
                             <div class="row mb-3">
-                                <label for="text" class="col-md-4 col-form-label text-md-end">{{ __('posts.content') }}</label>
+                                <label for="content" class="col-md-4 col-form-label text-md-end">{{ __('posts.content') }}</label>
                                 <div class="col-md-6">
-                                    <textarea id="text" type="text" maxlength="4000" class="form-control @error('text') is-invalid @enderror" name="text" required>{{ old('text') }}</textarea>
-                                    @error('text')
+                                    <textarea id="content" type="text" maxlength="4000" class="form-control @error('content') is-invalid @enderror" name="content" required>{{ old('content') }}</textarea>
+                                    @error('content')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>

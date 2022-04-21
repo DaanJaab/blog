@@ -18,9 +18,11 @@ class CommentFactory extends Factory
      */
     public function definition()
     {
+        $create_date = $this->faker->dateTimeBetween('-60 days', '-20 days');
         return [
-            'text' => $this->faker->realText(4000),
-            'created_at' => $this->faker->dateTimeBetween('-60 days'),
+            'content' => $this->faker->realText(4000),
+            'created_at' => $create_date,
+            'updated_at' => $this->faker->randomElement([$create_date, $create_date, $this->faker->dateTimeBetween('-19 days', '-5 days')]),
             'user_id' => User::inRandomOrder()->first()->id,
             'post_id' => Post::inRandomOrder()->first()->id,
         ];

@@ -11,7 +11,7 @@
                         <div class="pull-left m-r-md">
                             <i class="fa fa-globe text-navy mid-icon"></i>
                         </div>
-                        <h2><a href="{{ route('blog.index') }}">{{ __('global.blog_page') }}</a> -&rsaquo; {{-- <a href="{{ route('blog.show', $post->category->name_slug) }}">{{ $post->category->name }}</a> -&rsaquo; --}} {{ __('posts.posts') }}</h2>
+                        <h2><a href="{{ route('blog.index') }}">{{ __('global.blog_page') }}</a> -&rsaquo; {{-- <a href="{{ route('blog.show', $post->category->slug) }}">{{ $post->category->name }}</a> -&rsaquo; --}} {{ __('posts.posts') }}</h2>
                         <span>{{ __('posts.list_desc') }}</span>
                     </div>
                 </div>
@@ -28,14 +28,14 @@
                                     <div class="forum-icon">
                                         <i class="fa fa-shield"></i>
                                     </div>
-                                    <a href="{{ route('users.show', $user->name_slug) }}" class="forum-item-title {{ $admin_color }} if-admin-color">{{ $user->name }}</a>
+                                    <a href="{{ route('users.show', $user->slug) }}" class="forum-item-title {{ $admin_color }} if-admin-color">{{ $user->name }}</a>
                                     <div class="forum-sub-title">
                                         {{ __('user.created_at') . $user->created_at->format('d-m-Y') }}
                                     </div>
                                 </div>
                                 <div class="col-md-2 forum-info">
                                     <span class="views-number">
-                                        <a href="{{ route('users.posts.index', $user->name_slug) }}">{{ $user->posts_count }}</a>
+                                        <a href="{{ route('users.posts.index', $user->slug) }}">{{ $user->posts_count }}</a>
                                     </span>
                                     <div>
                                         <small>{{ __('user.posts') }}</small>
@@ -43,7 +43,7 @@
                                 </div>
                                 <div class="col-md-1 forum-info">
                                     <span class="views-number">
-                                        <a href="{{ route('users.comments.index', $user->name_slug) }}">{{ $user->comments_count }}</a>
+                                        <a href="{{ route('users.comments.index', $user->slug) }}">{{ $user->comments_count }}</a>
                                     </span>
                                     <div>
                                         <small>{{ __('user.comments') }}</small>
@@ -52,7 +52,7 @@
                                 <div class="col-md-1 forum-info">
                                     <span class="views-last">
                                         {{--  @if (null !== $post->latestComment)
-                                            <a href="{{ route('users.show', $post->latestComment->user->name_slug) }}">
+                                            <a href="{{ route('users.show', $post->latestComment->user->slug) }}">
                                                 <span class="{{ ($post->latestComment->user->role === \App\Enums\UserRole::ADMIN) ? 'is-admin' : ''; }} if-admin-color">{{ \Illuminate\Support\Str::limit($post->latestComment->user->name, 12, '...') }}</span>
                                             </a>
                                         @else

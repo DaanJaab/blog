@@ -33,7 +33,7 @@
                                 </div>
                                 <div class="col-md-2 forum-info">
                                     <span class="views-number">
-                                        <a href="{{ route('users.posts.index', $user->name_slug) }}">{{ $user->posts_count }}</a>
+                                        <a href="{{ route('users.posts.index', $user->slug) }}">{{ $user->posts_count }}</a>
                                     </span>
                                     <div>
                                         <small>{{ __('user.posts') }}</small>
@@ -41,7 +41,7 @@
                                 </div>
                                 <div class="col-md-1 forum-info">
                                     <span class="views-number">
-                                        <a href="{{ route('users.comments.index', $user->name_slug) }}">{{ $user->comments_count }}</a>
+                                        <a href="{{ route('users.comments.index', $user->slug) }}">{{ $user->comments_count }}</a>
                                     </span>
                                     <div>
                                         <small>{{ __('user.comments') }}</small>
@@ -50,7 +50,7 @@
                                 <div class="col-md-1 forum-info">
                                     <span class="views-last">
                                         {{--  @if (null !== $post->latestComment)
-                                            <a href="{{ route('users.show', $post->latestComment->user->name_slug) }}">
+                                            <a href="{{ route('users.show', $post->latestComment->user->slug) }}">
                                                 <span class="{{ ($post->latestComment->user->role === \App\Enums\UserRole::ADMIN) ? 'is-admin' : ''; }} if-admin-color">{{ \Illuminate\Support\Str::limit($post->latestComment->user->name, 12, '...') }}</span>
                                             </a>
                                         @else

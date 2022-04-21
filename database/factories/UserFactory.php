@@ -20,18 +20,18 @@ class UserFactory extends Factory
     public function definition()
     {
         $name = substr($this->faker->unique()->name(), 0, 30);
+        $create_date = $this->faker->dateTimeBetween('-60 days', '-20 days');
         return [
             'name' => $name,
-            'name_slug' => Str::slug($name),
+            'slug' => Str::slug($name),
             'email' => $this->faker->unique()->safeEmail(),
-            'email_verified_at' => $this->faker->randomElement([null, $this->faker->dateTimeBetween('-60 days')]),
+            'email_verified_at' => $this->faker->randomElement([null, $this->faker->dateTimeBetween('-19 days', '-5 days')]),
             'password' => Hash::make('12341234'),
-            'remember_token' => null,
             'role' => $this->faker->randomElement([UserRole::USER, UserRole::USER, UserRole::USER, UserRole::USER, UserRole::ADMIN]),
-            'footer' => $this->faker->randomElement([null, $this->faker->realText(400)]),
-            'created_at' => $this->faker->dateTimeBetween('-60 days'),
-            'banned_to' => $this->faker->randomElement([null, null, $this->faker->dateTimeBetween('+1 days', '+50 days')]),
-            'deleted_at' => $this->faker->randomElement([null, null, null, $this->faker->dateTimeBetween('-60 days')])
+            'signature' => $this->faker->randomElement([null, $this->faker->realText(400)]),
+            'created_at' => $create_date,
+            'updated_at' => $this->faker->randomElement([$create_date, $create_date, $this->faker->dateTimeBetween('-19 days', '-5 days')]),
+            'deleted_at' => $this->faker->randomElement([null, null, null, $this->faker->dateTimeBetween('-4 days')])
         ];
     }
 

@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use Faker\Factory;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -22,7 +21,7 @@ class PostsCategorySeeder extends Seeder
         for ($i = 0; $i < 9; $i++) {
             DB::table('posts_categories')->insert([
                 'name' => $categories[$i],
-                'name_slug' => Str::slug($categories[$i]),
+                'slug' => Str::slug($categories[$i]),
                 'description' => $faker->realText(600)
             ]);
         }

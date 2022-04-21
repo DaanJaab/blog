@@ -17,6 +17,7 @@ return new class extends Migration
         Schema::create('banned_users', function (Blueprint $table) {
             $table->unsignedBigInteger('banned_id');
             $table->unsignedBigInteger('banned_by_id');
+            $table->timestamp('banned_at');
             $table->enum('ban_reason', BanReasons::TYPES)->nullable();
             $table->string('ban_comment', 150)->nullable();
             $table->foreign('banned_id')->references('id')->on('users')->onDelete('cascade');

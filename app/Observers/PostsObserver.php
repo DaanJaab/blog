@@ -3,7 +3,6 @@
 namespace App\Observers;
 
 use App\Models\Post;
-use Cviebrock\EloquentSluggable\Services\SlugService;
 
 class PostsObserver
 {
@@ -16,7 +15,6 @@ class PostsObserver
     public function creating(Post $post)
     {
         $post->user_id = auth()->user()->id;
-        $post->slug = SlugService::createSlug(Post::class, 'slug', $post->title);
         $post->category_id = request()->category; // take category from request input, or if not exist take from route
     }
 

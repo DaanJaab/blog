@@ -11,8 +11,8 @@
                         <div class="pull-left m-r-md">
                             <i class="fa fa-globe text-navy mid-icon"></i>
                         </div>
-                        <h2><a href="{{ route('blog.index') }}">{{ __('global.blog_page') }}</a> -&rsaquo; <a href="{{ route('blog.show', $post->category->name_slug) }}">{{ $post->category->name }}</a> -&rsaquo; <a href="{{ route('posts.show', $post->slug) }}">{{ \Illuminate\Support\Str::limit($post->title, 40, '...') }}</a> -&rsaquo; {{ __('posts.post') }}</h2>
-                        <span>{{ $post->text }}</span>
+                        <h2><a href="{{ route('blog.index') }}">{{ __('global.blog_page') }}</a> -&rsaquo; <a href="{{ route('blog.show', $post->category->slug) }}">{{ $post->category->name }}</a> -&rsaquo; <a href="{{ route('posts.show', $post->slug) }}">{{ \Illuminate\Support\Str::limit($post->title, 40, '...') }}</a> -&rsaquo; {{ __('posts.post') }}</h2>
+                        <span>YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY666666666666666666666666666666666666666666666666666666666</span>
                     </div>
                 </div>
 
@@ -27,7 +27,7 @@
                                         <div class="col-md-12 forum-icon">
                                             <i class="fa fa-shield"></i>
                                         </div>
-                                        <a href="{{ route('users.show', $comment->authorInfo->name_slug) }}" class="forum-item-title">
+                                        <a href="{{ route('users.show', $comment->authorInfo->slug) }}" class="forum-item-title">
                                             <span class="{{ $admin_color }} if-admin-color">{{ $comment->authorInfo->name }}</span>
                                         </a>
                                         <small>{{ __('posts.user.created_at') }}</small>
@@ -47,7 +47,7 @@
                                     </div>
                                     <br>
                                     <div>
-                                        {{ $comment->text }}
+                                        {{ $comment->content }}
                                     </div>
                                     <div class="col-md-12 user-desc">
                                         <div class="float-start">
@@ -73,9 +73,9 @@
                                             </small>
                                         </div>
                                     </div>
-                                    @if ($comment->authorInfo->footer !== null)
+                                    @if ($comment->authorInfo->signature !== null)
                                         <div class="col-md-12">
-                                            {{ $comment->authorInfo->footer }}
+                                            {{ $comment->authorInfo->signature }}
                                         </div>
                                     @endif
                                 </div>

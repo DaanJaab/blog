@@ -9,19 +9,18 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Comment extends Model
 {
-    use HasFactory;
-    use SoftDeletes;
+    use HasFactory, SoftDeletes;
     //use Prunable;
 
     protected $fillable = [
-        'text'
+        'content'
     ];
 
     //protected $with = ['user'];
 
     public function user()
     {
-        return $this->belongsTo(User::class)->select('id', 'name', 'name_slug', 'role');
+        return $this->belongsTo(User::class)->select('id', 'name', 'slug', 'role');
     }
 
     public function authorInfo()
@@ -41,7 +40,7 @@ class Comment extends Model
 
     public function category()
     {
-        return $this->belongsTo(PostsCategory::class)->select('id', 'name', 'name_slug', 'description');
+        return $this->belongsTo(PostsCategory::class)->select('id', 'name', 'slug', 'description');
     }
 
 

@@ -8,20 +8,18 @@ use Cviebrock\EloquentSluggable\Sluggable;
 
 class Post extends Model
 {
-    use HasFactory;
-    use Sluggable;
+    use HasFactory, Sluggable;
 
     protected $fillable = [
-        'slug',
         'title',
-        'text',
+        'content',
         'category_id'
     ];
     //protected $with = ['comments', 'user', 'category'];
 
     public function user()
     {
-        return $this->belongsTo(User::class)->select('id', 'name', 'name_slug', 'role');
+        return $this->belongsTo(User::class)->select('id', 'name', 'slug', 'role');
     }
 
     public function authorInfo()
@@ -46,7 +44,7 @@ class Post extends Model
 
     public function category()
     {
-        return $this->belongsTo(PostsCategory::class, 'category_id', 'id')->select('id', 'name', 'name_slug', 'description');
+        return $this->belongsTo(PostsCategory::class, 'category_id', 'id')->select('id', 'name', 'slug', 'description');
     }
 
     public function getRouteKeyName()

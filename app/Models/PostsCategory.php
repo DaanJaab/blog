@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class PostsCategory extends Model
 {
-    use HasFactory;
+    use HasFactory, Sluggable;
 
     protected $table = 'posts_categories';
 
@@ -19,7 +20,6 @@ class PostsCategory extends Model
      */
     protected $fillable = [
         'name',
-        'name_slug',
         'description'
     ];
 
@@ -27,6 +27,7 @@ class PostsCategory extends Model
     {
         return $this->hasMany(Post::class, 'category_id', 'id');
     }
+
     public function latestPost()
     {
         return $this->hasOne(Post::class, 'category_id', 'id')->latest();
@@ -39,6 +40,15 @@ class PostsCategory extends Model
 
     public function getRouteKeyName()
     {
-        return 'name_slug';
+        return 'slug';
+    }
+
+    public function sluggable(): array
+    {
+        return [
+            'slug' => [
+                'source' => 'name'
+            ]
+        ];
     }
 }

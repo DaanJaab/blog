@@ -11,7 +11,7 @@
                         <div class="pull-left m-r-md">
                             <i class="fa fa-globe text-navy mid-icon"></i>
                         </div>
-                        <h2><a href="{{ route('blog.index') }}">{{ __('global.blog_page') }}</a> -&rsaquo; <a href="{{ route('blog.show', $post->category->name_slug) }}">{{ $post->category->name }}</a> -&rsaquo; {{ __('posts.post') }}</h2>
+                        <h2><a href="{{ route('blog.index') }}">{{ __('global.blog_page') }}</a> -&rsaquo; <a href="{{ route('blog.show', $post->category->slug) }}">{{ $post->category->name }}</a> -&rsaquo; {{ __('posts.post') }}</h2>
                         <span>{{ $post->category->description }}</span>
                     </div>
                 </div>
@@ -26,7 +26,7 @@
                                     <div class="col-md-12 forum-icon">
                                         <i class="fa fa-shield"></i>
                                     </div>
-                                    <a href="{{ route('users.show', $post->authorInfo->name_slug) }}" class="forum-item-title">
+                                    <a href="{{ route('users.show', $post->authorInfo->slug) }}" class="forum-item-title">
                                             <span class="{{ $admin_color }} if-admin-color">{{ $post->authorInfo->name }}</span>
                                     </a>
                                     <small>{{ __('posts.user.created_at') }}</small>
@@ -51,7 +51,7 @@
                                     </span>
                                 </div>
                                 <div>
-                                    {{ $post->text }}
+                                    {{ $post->content }}
                                 </div>
                                 <div class="col-md-12 user-desc">
                                     <div class="float-start">
@@ -77,9 +77,9 @@
                                         </small>
                                     </div>
                                 </div>
-                                @if ($post->authorInfo->footer !== null)
+                                @if ($post->authorInfo->signature !== null)
                                     <div class="col-md-12">
-                                        {{ $post->authorInfo->footer }}
+                                        {{ $post->authorInfo->signature }}
                                     </div>
                                 @endif
                             </div>
@@ -100,7 +100,7 @@
                                         <div class="col-md-12 forum-icon">
                                             <i class="fa fa-shield"></i>
                                         </div>
-                                        <a href="{{ route('users.show', $comment->authorInfo->name_slug) }}" class="forum-item-title">
+                                        <a href="{{ route('users.show', $comment->authorInfo->slug) }}" class="forum-item-title">
                                             <span class="{{ $admin_color }} if-admin-color">{{ $comment->authorInfo->name }}</span>
                                         </a>
                                         <small>{{ __('posts.user.created_at') }}</small>
@@ -120,7 +120,7 @@
                                     </div>
                                     <br>
                                     <div>
-                                        {{ $comment->text }}
+                                        {{ $comment->content }}
                                     </div>
                                     <div class="col-md-12 user-desc">
                                         <div class="float-start">
@@ -146,9 +146,9 @@
                                             </small>
                                         </div>
                                     </div>
-                                    @if ($comment->authorInfo->footer !== null)
+                                    @if ($comment->authorInfo->signature !== null)
                                         <div class="col-md-12">
-                                            {{ $comment->authorInfo->footer }}
+                                            {{ $comment->authorInfo->signature }}
                                         </div>
                                     @endif
                                 </div>
@@ -157,7 +157,7 @@
                     </div>
                 @empty
                     <div class="row mb-0">
-                        <label for="text" class="col-form-label text-md-center">{{ __('posts.comments.none') }}</label>
+                        <label class="col-form-label text-md-center">{{ __('posts.comments.none') }}</label>
                     </div>
                 @endforelse
                 <a class="pagination">{{ $comments->onEachSide(1)->links() }}</a>
@@ -170,10 +170,10 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="row mb-3">
-                                            <label for="text" class="col-md-4 col-form-label text-md-end">{{ __('posts.comments.add') }}</label>
+                                            <label for="content" class="col-md-4 col-form-label text-md-end">{{ __('posts.comments.add') }}</label>
                                             <div class="col-md-6">
-                                                <textarea id="text" type="text" maxlength="4000" class="form-control @error('text') is-invalid @enderror" name="text">{{ old('text') }}</textarea>
-                                                @error('text')
+                                                <textarea id="content" type="text" maxlength="4000" class="form-control @error('content') is-invalid @enderror" name="content" required>{{ old('content') }}</textarea>
+                                                @error('content')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
                                                     </span>
@@ -194,7 +194,7 @@
                     @endauth
                     @guest
                         <div class="row mb-0">
-                            <label for="text" class="col-form-label text-md-center">{{ __('posts.comments.login_to_put') }}</label>
+                            <label class="col-form-label text-md-center">{{ __('posts.comments.login_to_put') }}</label>
                         </div>
                     @endguest
                 </div>

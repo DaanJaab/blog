@@ -29,7 +29,7 @@ class UsersController extends Controller
     public function show($name_slug)
     {
         return view('users.show')
-            ->with('user', User::where('name_slug', $name_slug)->withCount('posts', 'comments')->firstOrFail());
+            ->with('user', User::where('slug', $name_slug)->withCount('posts', 'comments')->firstOrFail());
     }
 
     /**

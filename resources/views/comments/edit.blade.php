@@ -12,7 +12,7 @@
                             <i class="fa fa-globe text-navy mid-icon"></i>
                         </div>
                         <h2>
-                            <a href="{{ route('blog.index') }}">{{ __('global.blog_page') }}</a> -&rsaquo; <a href="{{ route('blog.show', $comment->post->category->name_slug) }}">{{ $comment->post->category->name }}</a> -&rsaquo;  <a href="{{ route('posts.show', $comment->post->slug) }}">{{ \Illuminate\Support\Str::limit($comment->post->title, 30, '...') }}</a> -&rsaquo; {{ __('comments.editing') }}
+                            <a href="{{ route('blog.index') }}">{{ __('global.blog_page') }}</a> -&rsaquo; <a href="{{ route('blog.show', $comment->post->category->slug) }}">{{ $comment->post->category->name }}</a> -&rsaquo;  <a href="{{ route('posts.show', $comment->post->slug) }}">{{ \Illuminate\Support\Str::limit($comment->post->title, 30, '...') }}</a> -&rsaquo; {{ __('comments.editing') }}
                         </h2>
                         <span>{{ __('comments.editing_desc') }}</span>
                     </div>
@@ -23,10 +23,10 @@
                             {{ method_field('PUT') }}
                             @csrf
                             <div class="row mb-3">
-                                <label for="text" class="col-md-4 col-form-label text-md-end">{{ __('comments.content') }}</label>
+                                <label for="content" class="col-md-4 col-form-label text-md-end">{{ __('comments.content') }}</label>
                                 <div class="col-md-6">
-                                    <textarea id="text" type="text" maxlength="4000" class="form-control @error('text') is-invalid @enderror" name="text" required>@if(old('text') !== null){{ old('text') }}@else{{ $comment->text }}@endif</textarea>
-                                    @error('text')
+                                    <textarea id="content" type="text" maxlength="4000" class="form-control @error('content') is-invalid @enderror" name="content" required>@if(old('content') !== null){{ old('content') }}@else{{ $comment->content }}@endif</textarea>
+                                    @error('content')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>

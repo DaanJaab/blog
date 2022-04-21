@@ -19,12 +19,14 @@ class PostFactory extends Factory
      */
     public function definition()
     {
-        $post = $this->faker->unique()->realText(80);
+        $title = $this->faker->unique()->realText(80);
+        $create_date = $this->faker->dateTimeBetween('-60 days', '-20 days');
         return [
-            'title' => $post,
-            'slug' => Str::slug($post),
-            'text' => $this->faker->realText(4000),
-            'created_at' => $this->faker->dateTimeBetween('-60 days'),
+            'title' => $title,
+            'slug' => Str::slug($title),
+            'content' => $this->faker->realText(4000),
+            'created_at' => $create_date,
+            'updated_at' => $this->faker->randomElement([$create_date, $create_date, $this->faker->dateTimeBetween('-19 days', '-5 days')]),
             'user_id' => User::inRandomOrder()->first()->id,
             'category_id' => PostsCategory::inRandomOrder()->first()->id,
         ];

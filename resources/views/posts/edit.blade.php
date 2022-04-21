@@ -11,7 +11,7 @@
                         <div class="pull-left m-r-md">
                             <i class="fa fa-globe text-navy mid-icon"></i>
                         </div>
-                        <h2><a href="{{ route('blog.index') }}">{{ __('global.blog_page') }}</a> -&rsaquo; <a href="{{ route('blog.show', $post->category->name_slug) }}">{{ $post->category->name }}</a> -&rsaquo; {{ __('posts.editing') }}</h2>
+                        <h2><a href="{{ route('blog.index') }}">{{ __('global.blog_page') }}</a> -&rsaquo; <a href="{{ route('blog.show', $post->category->slug) }}">{{ $post->category->name }}</a> -&rsaquo; {{ __('posts.editing') }}</h2>
                         <span>{{ __('posts.editing_desc') }}</span>
 
                     </div>
@@ -25,7 +25,7 @@
                             <div class="row mb-3">
                                 <label for="title" class="col-md-4 col-form-label text-md-end">{{ __('posts.title') }}</label>
                                 <div class="col-md-6">
-                                    <input id="title" type="text" maxlength="80" class="form-control @error('title') is-invalid @enderror" name="title" value="@if(old('title') !== null){{ old('title') }}@else{{ $post->title }}@endif" required autocomplete="title" autofocus>
+                                    <input id="title" type="text" maxlength="80" class="form-control @error('title') is-invalid @enderror" name="title" value="@if(old('title') !== null){{ old('title') }}@else{{ $post->title }}@endif" autocomplete="title" required autofocus>
                                     @error('title')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -35,10 +35,10 @@
                             </div>
 
                             <div class="row mb-3">
-                                <label for="text" class="col-md-4 col-form-label text-md-end">{{ __('posts.content') }}</label>
+                                <label for="content" class="col-md-4 col-form-label text-md-end">{{ __('posts.content') }}</label>
                                 <div class="col-md-6">
-                                    <textarea id="text" type="text" maxlength="4000" class="form-control @error('text') is-invalid @enderror" name="text" required>@if(old('text') !== null){{ old('text') }}@else{{ $post->text }}@endif</textarea>
-                                    @error('text')
+                                    <textarea id="content" type="text" maxlength="4000" class="form-control @error('content') is-invalid @enderror" name="content" required>@if(old('content')) {{ old('content') }}@else{{ $post->content }}@endif</textarea>
+                                    @error('content')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>

@@ -12,7 +12,7 @@
                             <i class="fa fa-globe text-navy mid-icon"></i>
                         </div>
                         <div class="pull-right m-r-md">
-                            <a href="{{ route('blog.posts.create', $category->name_slug) }}">
+                            <a href="{{ route('blog.posts.create', $category->slug) }}">
                                 <button class="btn btn-primary">
                                     {{ __('blog.buttons.add_post_in_this_category') }}
                                 </button>
@@ -36,7 +36,7 @@
                                     </div>
                                     <a href="{{ route('posts.show', $post->slug) }}" class="forum-item-title">{{ $post->title }}</a>
                                     <div class="forum-sub-title">{{ __('blog.posts.by') }}
-                                        <a href="{{ route('users.show', $post->user->name_slug) }}">
+                                        <a href="{{ route('users.show', $post->user->slug) }}">
                                             <span class="{{ $admin_color }} if-admin-color">{{ $post->user->name }}</span>
                                         </a>
                                         {{ __('blog.posts.create_date') . $post->created_at->format('d-m-Y') }}
@@ -53,7 +53,7 @@
                                 <div class="col-md-1 forum-info">
                                     <span class="views-last">
                                         @if (null !== $post->latestComment)
-                                            <a href="{{ route('users.show', $post->latestComment->user->name_slug) }}">
+                                            <a href="{{ route('users.show', $post->latestComment->user->slug) }}">
                                                 <span class="{{ ($post->latestComment->user->role === \App\Enums\UserRole::ADMIN) ? 'is-admin' : ''; }} if-admin-color">{{ \Illuminate\Support\Str::limit($post->latestComment->user->name, 12, '...') }}</span>
                                             </a>
                                         @else
@@ -75,7 +75,7 @@
                     </div>
                 @empty
                     <div class="row mb-0">
-                        <label for="description" class="col-form-label text-md-center">{{ __('blog.posts.none_in_category') }}</label>
+                        <label class="col-form-label text-md-center">{{ __('blog.posts.none_in_category') }}</label>
                     </div>
                 @endforelse
                 <a class="pagination">{{ $posts->onEachSide(1)->links() }}</a>

@@ -26,13 +26,13 @@ class StorePostRequest extends FormRequest
     {
         if (!request()->input('category')) {
             $rules = [
-                'title' => 'required|max:80',
-                'text' => 'required|max:4000'
+                'title' => 'required|min:15|max:80',
+                'content' => 'required|min:60|max:4000'
             ];
         } else {
             $rules = [
-                'title' => 'required|max:80',
-                'text' => 'required|max:4000',
+                'title' => 'required|min:15|max:80',
+                'content' => 'required|min:60|max:4000',
                 'category' => 'required|exists:posts_categories,id'
             ];
         }
